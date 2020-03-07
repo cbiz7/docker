@@ -45,9 +45,8 @@ services:
     - "6789:6789"
     volumes:
     - ${CONFIG}/nzbget:/config
-    - ${DOWNLOAD}/complete:/downloads
+    - ${DOWNLOAD}:/downloads
     - ${DOWNLOAD}/incomplete:/incomplete-downloads
-    - ${DOWNLOAD}/watch:/watch
     environment:
     - PGID
     - PUID
