@@ -27,58 +27,58 @@ services:
     hostname: ouroboros
     image: pyouroboros/ouroboros:latest
     environment:
-      - CLEANUP=true
-      - INTERVAL=300
-      - LOG_LEVEL=info
-      - SELF_UPDATE=true
-      - IGNORE=influxdb mariadb
-      - TZ
+    - CLEANUP=true
+    - INTERVAL=300
+    - LOG_LEVEL=info
+    - SELF_UPDATE=true
+    - IGNORE=influxdb mariadb
+    - TZ
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+    - /var/run/docker.sock:/var/run/docker.sock
 
-    nzbget:
-     image: linuxserver/nzbget:latest
-     container_name: nzbget
-     hostname: nzbget
-     ports:
-       - "6789:6789"
-     volumes:
-       - ${CONFIG}/nzbget:/config
-       - ${DOWNLOAD}/complete:/downloads
-       - ${DOWNLOAD}/incomplete:/incomplete-downloads
-       - ${DOWNLOAD}/watch:/watch
-     environment:
-       - PGID
-       - PUID
-       - TZ
-     # labels:
-     #   traefik.enable: "true"
-     #   traefik.port: "6789"
-     #   traefik.frontend.rule: "Host:nzbget.${DOMAIN}"
-     #   traefik.frontend.auth.basic: "${HTPASSWD}"
-     restart: unless-stopped
+  nzbget:
+    image: linuxserver/nzbget:latest
+    container_name: nzbget
+    hostname: nzbget
+    ports:
+    - "6789:6789"
+    volumes:
+    - ${CONFIG}/nzbget:/config
+    - ${DOWNLOAD}/complete:/downloads
+    - ${DOWNLOAD}/incomplete:/incomplete-downloads
+    - ${DOWNLOAD}/watch:/watch
+    environment:
+    - PGID
+    - PUID
+    - TZ
+    # labels:
+    #   traefik.enable: "true"
+    #   traefik.port: "6789"
+    #   traefik.frontend.rule: "Host:nzbget.${DOMAIN}"
+    #   traefik.frontend.auth.basic: "${HTPASSWD}"
+    restart: unless-stopped
 
-    # sonarr:
-    #  image: linuxserver/sonarr:latest
-    #  container_name: sonarr
-    #  hostname: sonarr
-    #  ports:
-    #   - "8989:8989"
-    #  volumes:
-    #   - ${CONFIG}/sonarr:/config
-    #   - ${DOWNLOAD}:/downloads
-    #   - ${TVSHOWS}:/tv
-    #  environment:
-    #   - PGID
-    #   - PUID
-    #   - TZ
-    #  # labels:
-    #  #  traefik.enable: "true"
-    #  #  traefik.port: "8989"
-    #  #  traefik.frontend.rule: "Host:sonarr.${DOMAIN}"
-    #  #  traefik.frontend.auth.basic: "${HTPASSWD}"
-    #  restart: unless-stopped
+  # sonarr:
+  #  image: linuxserver/sonarr:latest
+  #  container_name: sonarr
+  #  hostname: sonarr
+  #  ports:
+  #   - "8989:8989"
+  #  volumes:
+  #   - ${CONFIG}/sonarr:/config
+  #   - ${DOWNLOAD}:/downloads
+  #   - ${TVSHOWS}:/tv
+  #  environment:
+  #   - PGID
+  #   - PUID
+  #   - TZ
+  #  # labels:
+  #  #  traefik.enable: "true"
+  #  #  traefik.port: "8989"
+  #  #  traefik.frontend.rule: "Host:sonarr.${DOMAIN}"
+  #  #  traefik.frontend.auth.basic: "${HTPASSWD}"
+  #  restart: unless-stopped
 
   # radarr:
   #   image: linuxserver/radarr:latest
