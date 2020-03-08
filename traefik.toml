@@ -4,6 +4,11 @@ logLevel = "ERROR"
 defaultEntryPoints = ["https","http"]
 
 [entryPoints]
+  [entryPoints.dashboard]
+    address = ":8080"
+    [entryPoints.dashboard.auth]
+      [entryPoints.dashboard.auth.basic]
+        users = ["chris:{SHA}AThemvtnfYZfFZUvpu/v4jRKoU0="]
   [entryPoints.http]
   address = ":80"
     [entryPoints.http.redirect]
@@ -12,13 +17,18 @@ defaultEntryPoints = ["https","http"]
   address = ":443"
   [entryPoints.https.tls]
 
-[retry]
+[api]
+  entrypoint="dashboard"
 
 [acme]
 email = "chris.furby@gmail.com"
 storage = "acme.json"
 entryPoint = "https"
 OnHostRule = true
-[acme.httpChallenge]
-entryPoint = "http"
+  [acme.httpChallenge]
+  entryPoint = "http"
 
+[docker]
+  domain = "jeebs.co"
+  watch = true
+  network = "web"
