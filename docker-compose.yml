@@ -59,7 +59,7 @@ services:
     restart: unless-stopped
 
   sonarr:
-    image: linuxserver/sonarr:latest
+    image: linuxserver/sonarr:preview
     container_name: sonarr
     hostname: sonarr
     ports:
