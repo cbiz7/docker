@@ -58,26 +58,26 @@ services:
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
 
-  # sonarr:
-  #  image: linuxserver/sonarr:latest
-  #  container_name: sonarr
-  #  hostname: sonarr
-  #  ports:
-  #   - "8989:8989"
-  #  volumes:
-  #   - ${CONFIG}/sonarr:/config
-  #   - ${DOWNLOAD}:/downloads
-  #   - ${TVSHOWS}:/tv
-  #  environment:
-  #   - PGID
-  #   - PUID
-  #   - TZ
-  #  # labels:
-  #  #  traefik.enable: "true"
-  #  #  traefik.port: "8989"
-  #  #  traefik.frontend.rule: "Host:sonarr.${DOMAIN}"
-  #  #  traefik.frontend.auth.basic: "${HTPASSWD}"
-  #  restart: unless-stopped
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: sonarr
+    hostname: sonarr
+    ports:
+    - "8989:8989"
+    volumes:
+    - ${CONFIG}/sonarr:/config
+    - ${DOWNLOAD}:/downloads
+    - ${TVSHOWS}:/tv
+    environment:
+    - PGID
+    - PUID
+    - TZ
+   # labels:
+   #  traefik.enable: "true"
+   #  traefik.port: "8989"
+   #  traefik.frontend.rule: "Host:sonarr.${DOMAIN}"
+   #  traefik.frontend.auth.basic: "${HTPASSWD}"
+    restart: unless-stopped
 
   # radarr:
   #   image: linuxserver/radarr:latest
