@@ -20,6 +20,8 @@ defaultEntryPoints = ["https","http"]
 [api]
   entrypoint="dashboard"
 
+[retry]
+
 [acme]
 email = "chris.furby@gmail.com"
 storage = "acme.json"
@@ -30,6 +32,8 @@ OnDemand = false
   entryPoint = "http"
 
 [docker]
-  domain = "jeebs.co"
+  endpoint = "unix:///var/run/docker.sock"
+  # domain = "jeebs.co"
+  domain = "docker.localhost"
   watch = true
   network = "web"
