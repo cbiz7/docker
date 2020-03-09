@@ -21,6 +21,8 @@ services:
       traefik.frontend.rule: "Host:monitor.${DOMAIN}"
       traefik.port: "8080"
       traefik.frontend.auth.basic: "${HTPASSWD}"
+    networks:
+      - internal
     restart: unless-stopped
 
   ouroboros:
@@ -52,11 +54,11 @@ services:
     - PGID
     - PUID
     - TZ
-    # labels:
-    #   traefik.enable: "true"
-    #   traefik.port: "6789"
-    #   traefik.frontend.rule: "Host:nzbget.${DOMAIN}"
-    #   traefik.frontend.auth.basic: "${HTPASSWD}"
+    labels:
+      traefik.enable: "true"
+      traefik.port: "6789"
+      traefik.frontend.rule: "Host:nzbget.${DOMAIN}"
+      traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
 
   # sonarr:
@@ -222,3 +224,9 @@ services:
   #   #   traefik.port: "3579"
   #   #   traefik.frontend.rule: "Host:ombi.${DOMAIN}"
   #   restart: unless-stopped
+networks:
+  web:
+    external: true
+  internal:
+    external: false
+  db: #for database using containers
