@@ -5,17 +5,17 @@ defaultEntryPoints = ["https","http"]
 
 [entryPoints]
   [entryPoints.dashboard]
-    address = ":8080"
+  address = ":8080"
     [entryPoints.dashboard.auth]
-      [entryPoints.dashboard.auth.basic]
-        users = ["chris:{SHA}AThemvtnfYZfFZUvpu/v4jRKoU0="]
+    [entryPoints.dashboard.auth.basic]
+      users = ["chris:{SHA}AThemvtnfYZfFZUvpu/v4jRKoU0="]
   [entryPoints.http]
   address = ":80"
     [entryPoints.http.redirect]
     entryPoint = "https"
   [entryPoints.https]
   address = ":443"
-  [entryPoints.https.tls]
+    [entryPoints.https.tls]
 
 [api]
   entrypoint="dashboard"
@@ -25,6 +25,7 @@ email = "chris.furby@gmail.com"
 storage = "acme.json"
 entryPoint = "https"
 OnHostRule = true
+OnDemand = false
   [acme.httpChallenge]
   entryPoint = "http"
 
