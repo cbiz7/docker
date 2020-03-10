@@ -283,47 +283,47 @@ services:
     - internal
     - web
 
-    bookstack:
-      image: linuxserver/bookstack:latest
-      container_name: bookstack
-      hostname: bookstack
-      volumes:
-      - "${CONFIG}/bookstack:/config"
-      environment:
-      - PUID
-      - PGID
-      - TZ
-      - DB_HOST=bookstack-db
-      - DB_USER=books
-      - DB_DATABASE=books
-      ports:
-      - "6875:80"
-      - "6876:443"
-      depends_on:
-      - bookstack-db
-      restart: unless-stopped
-      networks:
-      - internal
-      - db
+  bookstack:
+    image: linuxserver/bookstack:latest
+    container_name: bookstack
+    hostname: bookstack
+    volumes:
+    - "${CONFIG}/bookstack:/config"
+    environment:
+    - PUID
+    - PGID
+    - TZ
+    - DB_HOST=bookstack-db
+    - DB_USER=books
+    - DB_DATABASE=books
+    ports:
+    - "6875:80"
+    - "6876:443"
+    depends_on:
+    - bookstack-db
+    restart: unless-stopped
+    networks:
+    - internal
+    - db
 
-    bookstack-db:
-      image: linuxserver/mariadb:latest
-      container_name: bookstack-db
-      hostname: bookstack-db
-      volumes:
-      - "${CONFIG}/bookstack-db:/config"
-      environment:
-      - PUID
-      - PGID
-      - TZ
-      - MYSQL_USER=books
-      - MYSQL_PASSWORD=books
-      - MYSQL_DATABASE=bookstack
-      - MYSQL_ROOT_PASSWORD=bijou
-      restart: unless-stopped
-      networks:
-      - internal
-      - db
+  bookstack-db:
+    image: linuxserver/mariadb:latest
+    container_name: bookstack-db
+    hostname: bookstack-db
+    volumes:
+    - "${CONFIG}/bookstack-db:/config"
+    environment:
+    - PUID
+    - PGID
+    - TZ
+    - MYSQL_USER=books
+    - MYSQL_PASSWORD=books
+    - MYSQL_DATABASE=bookstack
+    - MYSQL_ROOT_PASSWORD=bijou
+    restart: unless-stopped
+    networks:
+    - internal
+    - db
 
 networks:
   web:
