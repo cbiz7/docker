@@ -327,10 +327,13 @@ services:
 
 networks:
   web:
+    name: web
     external: true
   internal:
+    name: internal
     external: false
   db: #for database using containers
+    name: db
     external: false
 
 # For Traefik 2.0
