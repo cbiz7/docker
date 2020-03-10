@@ -298,7 +298,7 @@ services:
     - TZ
     - DB_HOST=bookstack-db
     - DB_USER=books
-    - DB_DATABASE=books
+    - DB_DATABASE=bookstack
     depends_on:
     - bookstack-db
     restart: unless-stopped
