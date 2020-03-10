@@ -41,7 +41,7 @@ services:
     - /var/run/docker.sock:/var/run/docker.sock
 
   portainer:
-    image: portainer/portainer
+    image: portainer/portainer:latest
     hostname: portainer
     command: -H unix:///var/run/docker.sock
     ports:
