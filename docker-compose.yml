@@ -137,6 +137,22 @@ services:
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
 
+  bazarr:
+    image: linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PGID
+      - PUID
+      - TZ
+    volumes:
+      - ${CONFIG}}/bazarr:/config
+      - ${TVSHOWS}:/tv
+      - ${MOVIES}:/movies
+      - ${4KMOVIES}:/4kmovies
+    ports:
+      - 6767:6767
+    restart: unless-stopped
+
   nzbhydra2:
     image: linuxserver/hydra2:latest
     container_name: hydra2
@@ -223,23 +239,24 @@ services:
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
 
-  # ombi:
-  #   image: linuxserver/ombi
-  #   container_name: ombi
-  #   hostname: ombi
-  #   ports:
-  #     - "3579:3579"
-  #   volumes:
-  #     - ${CONFIG}/ombi:/config
-  #   environment:
-  #     - PGID
-  #     - PUID
-  #     - TZ
-  #   # labels:
-  #   #   traefik.enable: "true"
-  #   #   traefik.port: "3579"
-  #   #   traefik.frontend.rule: "Host:ombi.${DOMAIN}"
-  #   restart: unless-stopped
+  ombi:
+    image: linuxserver/ombi:latest
+    container_name: ombi
+    hostname: ombi
+    ports:
+      - "3579:3579"
+    volumes:
+      - ${CONFIG}/ombi:/config
+    environment:
+      - PGID
+      - PUID
+      - TZ
+    # labels:
+    #   traefik.enable: "true"
+    #   traefik.port: "3579"
+    #   traefik.frontend.rule: "Host:ombi.${DOMAIN}"
+    restart: unless-stopped
+
 networks:
   web:
     external: true
