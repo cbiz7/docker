@@ -145,7 +145,7 @@ services:
       - PUID
       - TZ
     volumes:
-      - ${CONFIG}}/bazarr:/config
+      - ${CONFIG}/bazarr:/config
       - ${TVSHOWS}:/tv
       - ${MOVIES}:/movies
       - ${4KMOVIES}:/4kmovies
