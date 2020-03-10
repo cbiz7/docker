@@ -1,4 +1,4 @@
-version: "3"
+version: "3.7"
 services:
 
   # traefik:
@@ -287,6 +287,9 @@ services:
     image: linuxserver/bookstack:latest
     container_name: bookstack
     hostname: bookstack
+    ports:
+    - "6875:80"
+    - "6876:443"
     volumes:
     - "${CONFIG}/bookstack:/config"
     environment:
@@ -296,9 +299,6 @@ services:
     - DB_HOST=bookstack-db
     - DB_USER=books
     - DB_DATABASE=books
-    ports:
-    - "6875:80"
-    - "6876:443"
     depends_on:
     - bookstack-db
     restart: unless-stopped
@@ -324,6 +324,23 @@ services:
     networks:
     - internal
     - db
+
+    calibre:
+      image: linuxserver/calibre-web:latest
+      container_name: calibre
+      hostname: calibre
+      ports:
+        - 8083:8083
+      volumes:
+      - ${CONFIG}/calibre:/config
+      - ${BOOKS}:/books
+      environment:
+      - PUID
+      - PGID
+      - TZ
+      restart: unless-stopped
+      networks:
+      - internal
 
 networks:
   web:
