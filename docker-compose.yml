@@ -102,7 +102,7 @@ services:
     #   traefik.frontend.rule: "Host:radarr.${DOMAIN}"
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
-  
+
   lidarr:
     image: linuxserver/lidarr:latest
     container_name: lidarr
@@ -231,6 +231,7 @@ networks:
     external: false
   db: #for database using containers
 
-volumes:
-  - ${CONFIG}/traefik/traefik.yml:/traefik.yml
-  - ${CONFIG}traefik/dynamic_conf.yml:/dynamic_conf.yml
+# For Traefik 2.0
+# volumes:
+#   - ${CONFIG}/traefik/traefik.yml:/traefik.yml
+#   - ${CONFIG}traefik/dynamic_conf.yml:/dynamic_conf.yml
