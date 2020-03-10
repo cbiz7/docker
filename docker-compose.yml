@@ -325,22 +325,22 @@ services:
     - internal
     - db
 
-    calibre:
-      image: linuxserver/calibre-web:latest
-      container_name: calibre
-      hostname: calibre
-      ports:
-        - 8083:8083
-      volumes:
-      - ${CONFIG}/calibre:/config
-      - ${BOOKS}:/books
-      environment:
-      - PUID
-      - PGID
-      - TZ
-      restart: unless-stopped
-      networks:
-      - internal
+  calibre:
+    image: linuxserver/calibre-web:latest
+    container_name: calibre
+    hostname: calibre
+    ports:
+      - 8083:8083
+    volumes:
+    - ${CONFIG}/calibre:/config
+    - ${BOOKS}:/books
+    environment:
+    - PUID
+    - PGID
+    - TZ
+    restart: unless-stopped
+    networks:
+    - internal
 
 networks:
   web:
