@@ -1,29 +1,41 @@
 version: "3"
 services:
 
-  traefik:
-    image: traefik:v1.7
-    command: --web --docker --docker.watch --docker.domain=${DOMAIN} \
-             --docker.exposedbydefault=false --acme.domains=${DOMAIN}
-    container_name: traefik
-    hostname: traefik
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${CONFIG}/traefik/acme.json:/acme.json
-      - ${CONFIG}/traefik/traefik.toml:/etc/traefik/traefik.toml
-      # - ${CONFIG}/traefik/.htpasswd:/etc/traefik/.htpasswd:ro
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: "Host:monitor.${DOMAIN}"
-      traefik.port: "8080"
-      traefik.frontend.auth.basic: "${HTPASSWD}"
-    networks:
-      - internal
+  whoami:
+    image: containous/whoami
+    container_name: whoami
     restart: unless-stopped
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami-secure.entrypoints=https"
+      - "traefik.http.routers.whoami-secure.rule=Host(`whoami.jeebs.com`)"
+      - "traefik.http.routers.whoami-secure.tls.certresolver=myhttpchallenge"
+
+  # traefik:
+  #   image: traefik:v1.7
+  #   command: --web --docker --docker.watch --docker.domain=${DOMAIN} \
+  #            --docker.exposedbydefault=false --acme.domains=${DOMAIN}
+  #   container_name: traefik
+  #   hostname: traefik
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #     - "8080:8080"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - ${CONFIG}/traefik/acme.json:/acme.json
+  #     - ${CONFIG}/traefik/traefik.toml:/etc/traefik/traefik.toml
+  #     # - ${CONFIG}/traefik/.htpasswd:/etc/traefik/.htpasswd:ro
+  #   # labels:
+  #   #   traefik.enable: "true"
+  #   #   traefik.frontend.rule: "Host:monitor.${DOMAIN}"
+  #   #   traefik.port: "8080"
+  #   #   traefik.frontend.auth.basic: "${HTPASSWD}"
+  #   networks:
+  #     - internal
+  #   restart: unless-stopped
 
   ouroboros:
     container_name: ouroboros
@@ -54,11 +66,11 @@ services:
     - PGID
     - PUID
     - TZ
-    labels:
-      traefik.enable: "true"
-      traefik.port: "6789"
-      traefik.frontend.rule: "Host:nzbget.${DOMAIN}"
-      traefik.frontend.auth.basic: "${HTPASSWD}"
+    # labels:
+    #   traefik.enable: "true"
+    #   traefik.port: "6789"
+    #   traefik.frontend.rule: "Host:nzbget.${DOMAIN}"
+    #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
 
   # sonarr:
@@ -230,3 +242,7 @@ networks:
   internal:
     external: false
   db: #for database using containers
+
+volumes:
+  - ${CONFIG}/traefik/traefik.yml:/traefik.yml
+  - ${CONFIG}traefik/dynamic_conf.yml:/dynamic_conf.yml
