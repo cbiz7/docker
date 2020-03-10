@@ -40,6 +40,17 @@ services:
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
 
+  portainer:
+    image: portainer/portainer
+    command: -H unix:///var/run/docker.sock
+    ports:
+    - 9000:9000
+    - 8000:8000
+    restart: unless-stopped
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - ${CONFIG}/portainer:/data
+
   nzbget:
     image: linuxserver/nzbget:latest
     container_name: nzbget
@@ -123,27 +134,27 @@ services:
     #   traefik.frontend.rule: "Host:lidarr.${DOMAIN}"
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
-  #
-  # # nzbhydra2:
-  # #   image: linuxserver/hydra2:latest
-  # #   container_name: nzbhydra2
-  # #   hostname: nzbhydra2
-  # #   ports:
-  # #     - "5076:5076"
-  # #   volumes:
-  # #     - ${CONFIG}/nzbhydra2:/config
-  # #     - ${DOWNLOAD}/complete:/downloads
-  # #   environment:
-  # #     - PGID
-  # #     - PUID
-  # #     - TZ
-  # #   labels:
-  # #     traefik.enable: "true"
-  # #     traefik.port: "5076"
-  # #     traefik.frontend.rule: "Host:nzbhydra.${DOMAIN}"
-  # #     traefik.frontend.auth.basic: "${HTPASSWD}"
-  # #   restart: unless-stopped
-  #
+
+  nzbhydra2:
+    image: linuxserver/hydra2:latest
+    container_name: hydra2
+    hostname: hydra2
+    ports:
+      - "5076:5076"
+    volumes:
+      - ${CONFIG}/hydra2:/config
+      - ${DOWNLOAD}:/downloads
+    environment:
+      - PGID
+      - PUID
+      - TZ
+    # labels:
+    #   traefik.enable: "true"
+    #   traefik.port: "5076"
+    #   traefik.frontend.rule: "Host:nzbhydra.${DOMAIN}"
+    #   traefik.frontend.auth.basic: "${HTPASSWD}"
+    restart: unless-stopped
+
   # plex:
   #   image: linuxserver/plex
   #   container_name: plex
@@ -170,43 +181,46 @@ services:
   #   #   traefik.frontend.rule: "Host:plex.${DOMAIN}"
   #   restart: unless-stopped
   #
-  # tautulli:
-  #   image: linuxserver/tautulli:latest
-  #   container_name: tautulli
-  #   hostname: tautulli
-  #   ports:
-  #     - "8181:8181"
-  #   volumes:
-  #     - ${CONFIG}/tautulli:/config
-  #     - ${CONFIG}/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro
-  #   environment:
-  #     - PGID
-  #     - PUID
-  #     - TZ
-  #   # labels:
-  #   #   traefik.enable: "true"
-  #   #   traefik.port: "8181"
-  #   #   traefik.frontend.rule: "Host:tautulli.${DOMAIN}"
-  #   #   traefik.frontend.auth.basic: "${HTPASSWD}"
-  #   restart: unless-stopped
-  #
-  # heimdall:
-  #   image: linuxserver/heimdall:latest
-  #   container_name: heimdall
-  #   hostname: heimdall
-  #   volumes:
-  #     - ${CONFIG}/heimdall:/config
-  #   environment:
-  #     - PGID
-  #     - PUID
-  #     - TZ
-  #   # labels:
-  #   #   traefik.enable: "true"
-  #   #   traefik.port: "80"
-  #   #   traefik.frontend.rule: "Host:${DOMAIN}"
-  #   #   traefik.frontend.auth.basic: "${HTPASSWD}"
-  #   restart: unless-stopped
-  #
+  tautulli:
+    image: linuxserver/tautulli:latest
+    container_name: tautulli
+    hostname: tautulli
+    ports:
+      - "8181:8181"
+    volumes:
+      - ${CONFIG}/tautulli:/config
+      - ${CONFIG}/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro
+    environment:
+      - PGID
+      - PUID
+      - TZ
+    # labels:
+    #   traefik.enable: "true"
+    #   traefik.port: "8181"
+    #   traefik.frontend.rule: "Host:tautulli.${DOMAIN}"
+    #   traefik.frontend.auth.basic: "${HTPASSWD}"
+    restart: unless-stopped
+
+  heimdall:
+    image: linuxserver/heimdall:latest
+    container_name: heimdall
+    hostname: heimdall
+    ports:
+      - "5443:443"
+      - "5080:80"
+    volumes:
+      - ${CONFIG}/heimdall:/config
+    environment:
+      - PGID
+      - PUID
+      - TZ
+    # labels:
+    #   traefik.enable: "true"
+    #   traefik.port: "80"
+    #   traefik.frontend.rule: "Host:${DOMAIN}"
+    #   traefik.frontend.auth.basic: "${HTPASSWD}"
+    restart: unless-stopped
+
   # ombi:
   #   image: linuxserver/ombi
   #   container_name: ombi
