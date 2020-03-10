@@ -42,7 +42,7 @@ services:
 
   portainer:
     image: portainer/portainer
-    hostame: portainer
+    hostname: portainer
     command: -H unix:///var/run/docker.sock
     ports:
     - 9000:9000
