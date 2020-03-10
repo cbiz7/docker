@@ -148,7 +148,7 @@ services:
       - ${CONFIG}/bazarr:/config
       - ${TVSHOWS}:/tv
       - ${MOVIES}:/movies
-      - ${4KMOVIES}:/4kmovies
+    #  - ${4KMOVIES}:/4kmovies
     ports:
       - 6767:6767
     restart: unless-stopped
