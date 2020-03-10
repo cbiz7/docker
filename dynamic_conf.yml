@@ -1,4 +1,5 @@
 # dynamic_conf.yml
+# NOT USED - WILL USE 1.7 FOR NOW, IF I EVEN DECIDE TO USE TRAEFIK AT ALL.
 
 http:
   routers:

@@ -36,22 +36,26 @@ services:
     - SELF_UPDATE=true
     - IGNORE=influxdb mariadb
     - TZ
-    restart: unless-stopped
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    networks:
+    - internal
 
   portainer:
-    container_name: portainer
     image: portainer/portainer:latest
+    container_name: portainer
     hostname: portainer
     command: -H unix:///var/run/docker.sock
     ports:
     - 9000:9000
     - 8000:8000
-    restart: unless-stopped
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - ${CONFIG}/portainer:/data
+    restart: unless-stopped
+    networks:
+    - internal
 
   nzbget:
     image: linuxserver/nzbget:latest
@@ -73,6 +77,8 @@ services:
     #   traefik.frontend.rule: "Host:nzbget.${DOMAIN}"
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
+    networks:
+    - internal
 
   sonarr:
     image: linuxserver/sonarr:preview
@@ -94,6 +100,8 @@ services:
    #  traefik.frontend.rule: "Host:sonarr.${DOMAIN}"
    #  traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
+    networks:
+    - internal
 
   radarr:
     image: linuxserver/radarr:latest
@@ -115,6 +123,8 @@ services:
     #   traefik.frontend.rule: "Host:radarr.${DOMAIN}"
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
+    networks:
+    - internal
 
   lidarr:
     image: linuxserver/lidarr:latest
@@ -136,22 +146,26 @@ services:
     #   traefik.frontend.rule: "Host:lidarr.${DOMAIN}"
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
+    networks:
+    - internal
 
   bazarr:
     image: linuxserver/bazarr:latest
     container_name: bazarr
-    environment:
-      - PGID
-      - PUID
-      - TZ
+    ports:
+    - 6767:6767
     volumes:
       - ${CONFIG}/bazarr:/config
       - ${TVSHOWS}:/tv
       - ${MOVIES}:/movies
     #  - ${4KMOVIES}:/4kmovies
-    ports:
-      - 6767:6767
+    environment:
+      - PGID
+      - PUID
+      - TZ
     restart: unless-stopped
+    networks:
+    - internal
 
   nzbhydra2:
     image: linuxserver/hydra2:latest
@@ -172,6 +186,8 @@ services:
     #   traefik.frontend.rule: "Host:nzbhydra.${DOMAIN}"
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
+    networks:
+    - internal
 
   # plex:
   #   image: linuxserver/plex
@@ -198,6 +214,9 @@ services:
   #   #   traefik.port: "32400"
   #   #   traefik.frontend.rule: "Host:plex.${DOMAIN}"
   #   restart: unless-stopped
+  # networks:
+  # - internal
+  # - web
   #
   tautulli:
     image: linuxserver/tautulli:latest
@@ -218,6 +237,8 @@ services:
     #   traefik.frontend.rule: "Host:tautulli.${DOMAIN}"
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
+    networks:
+    - internal
 
   heimdall:
     image: linuxserver/heimdall:latest
@@ -238,6 +259,9 @@ services:
     #   traefik.frontend.rule: "Host:${DOMAIN}"
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
+    networks:
+    - internal
+    - web
 
   ombi:
     image: linuxserver/ombi:latest
@@ -255,7 +279,51 @@ services:
     #   traefik.enable: "true"
     #   traefik.port: "3579"
     #   traefik.frontend.rule: "Host:ombi.${DOMAIN}"
-    restart: unless-stopped
+    networks:
+    - internal
+    - web
+
+    bookstack:
+      image: linuxserver/bookstack:latest
+      container_name: bookstack
+      hostname: bookstack
+      volumes:
+      - "${CONFIG}/bookstack:/config"
+      environment:
+      - PUID
+      - PGID
+      - TZ
+      - DB_HOST=bookstack-db
+      - DB_USER=books
+      - DB_DATABASE=books
+      ports:
+      - "6875:80"
+      - "6876:443"
+      depends_on:
+      - bookstack-db
+      restart: unless-stopped
+      networks:
+      - internal
+      - db
+
+    bookstack-db:
+      image: linuxserver/mariadb:latest
+      container_name: bookstack-db
+      hostname: bookstack-db
+      volumes:
+      - "${CONFIG}/bookstack-db:/config"
+      environment:
+      - PUID
+      - PGID
+      - TZ
+      - MYSQL_USER=books
+      - MYSQL_PASSWORD=books
+      - MYSQL_DATABASE=bookstack
+      - MYSQL_ROOT_PASSWORD=bijou
+      restart: unless-stopped
+      networks:
+      - internal
+      - db
 
 networks:
   web:
@@ -263,6 +331,7 @@ networks:
   internal:
     external: false
   db: #for database using containers
+    external: false
 
 # For Traefik 2.0
 # volumes:
