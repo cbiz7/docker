@@ -263,24 +263,6 @@ services:
       - internal
       - web
 
-  homer:
-    image: nx211/docker-homer:latest
-    container_name: homer
-    hostname: homer
-    ports:
-      - "6080:80"
-      - "6443:443"
-    volumes:
-    #- </path/to/appdata/config>:/config # optional for access to nginx config
-      - ${CONFIG}/homer/config.yml:/homer/config.yml
-    environment:
-      - PUID
-      - PGID
-      - TZ
-    restart: unless-stopped
-    networks:
-      - internal
-
   ombi:
     image: linuxserver/ombi:latest
     container_name: ombi
@@ -382,7 +364,7 @@ services:
       - internal
 
   dashmashine:
-    image: rmountjoy/dashmashine:latest
+    image: rmountjoy/dashmachine:latest
     container_name: dashmashine
     hostname: dashmashine
     ports:
@@ -396,6 +378,24 @@ services:
     restart: unless-stopped
     networks:
       - internal
+
+  # homer:
+  #   image: nx211/docker-homer:latest
+  #   container_name: homer
+  #   hostname: homer
+  #   ports:
+  #     - "6080:80"
+  #     - "6443:443"
+  #   volumes:
+  #   #- </path/to/appdata/config>:/config # optional for access to nginx config
+  #     - ${CONFIG}/homer/config.yml:/homer/config.yml
+  #   environment:
+  #     - PUID
+  #     - PGID
+  #     - TZ
+  #   restart: unless-stopped
+  #   networks:
+  #     - internal
 
 networks:
   web:
