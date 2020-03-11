@@ -368,7 +368,7 @@ services:
     container_name: dashmashine
     hostname: dashmashine
     ports:
-      - "5000:5000"
+      - "5050:5050"
     volumes:
       - "${CONFIG}/dash:/dashmachine/dashmachine/user_data"
     environment:
