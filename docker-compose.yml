@@ -370,7 +370,7 @@ services:
     ports:
       - "5050:5050"
     volumes:
-      - "${CONFIG}/dash:/dashmachine/dashmachine/user_data"
+      - "${CONFIG}/dashmachine:/dashmachine/dashmachine/user_data"
     environment:
       - PUID
       - PGID
