@@ -158,7 +158,7 @@ services:
       - ${CONFIG}/bazarr:/config
       - ${TVSHOWS}:/tv
       - ${MOVIES}:/movies
-      - ${4KMOVIES}:/4kmovies
+    #  - ${4KMOVIES}:/4kmovies
     environment:
       - PGID
       - PUID
@@ -378,6 +378,7 @@ services:
     restart: unless-stopped
     networks:
       - internal
+
 
 networks:
   web:
