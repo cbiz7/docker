@@ -363,10 +363,10 @@ services:
     networks:
       - internal
 
-  dashmashine:
+  dashmachine:
     image: rmountjoy/dashmachine:latest
-    container_name: dashmashine
-    hostname: dashmashine
+    container_name: dashmachine
+    hostname: dashmachine
     ports:
       - "5050:5000"
     volumes:
