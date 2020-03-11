@@ -31,10 +31,11 @@ services:
     image: pyouroboros/ouroboros:latest
     environment:
       - CLEANUP=true
-      - INTERVAL=300
+      # - INTERVAL=300 / if CRON not defined, runs every 30 seconds.
+      - CRON="0 3 * * *" # Check for updates every morning at 3am.
       - LOG_LEVEL=info
       - SELF_UPDATE=true
-      - IGNORE=influxdb mariadb
+      - IGNORE="rtorrent influxdb mariadb bookstack-db"
       - TZ
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -378,7 +379,6 @@ services:
     restart: unless-stopped
     networks:
       - internal
-
 
 networks:
   web:
