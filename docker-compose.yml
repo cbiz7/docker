@@ -1,29 +1,31 @@
 version: "3.7"
 services:
 
-  # traefik:
-  #   image: traefik:v1.7
-  #   command: --web --docker --docker.watch --docker.domain=${DOMAIN} \
-  #            --docker.exposedbydefault=false --acme.domains=${DOMAIN}
-  #   container_name: traefik
-  #   hostname: traefik
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #     - "8080:8080"
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #     - ${CONFIG}/traefik/acme.json:/acme.json
-  #     - ${CONFIG}/traefik/traefik.toml:/etc/traefik/traefik.toml
-  #     # - ${CONFIG}/traefik/.htpasswd:/etc/traefik/.htpasswd:ro
-  #   # labels:
-  #   #   traefik.enable: "true"
-  #   #   traefik.frontend.rule: "Host:monitor.${DOMAIN}"
-  #   #   traefik.port: "8080"
-  #   #   traefik.frontend.auth.basic: "${HTPASSWD}"
-  #   networks:
-  #     - internal
-  #   restart: unless-stopped
+  traefik:
+    image: traefik:v1.7
+    command: --web --docker --docker.watch --docker.domain=${DOMAIN} \
+             --docker.exposedbydefault=false --acme.domains=${DOMAIN}
+    container_name: traefik
+    hostname: traefik
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${CONFIG}/traefik/acme.json:/acme.json
+      - ${CONFIG}/traefik/traefik.toml:/etc/traefik/traefik.toml
+      # - ${CONFIG}/traefik/.htpasswd:/etc/traefik/.htpasswd:ro
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: "Host:monitor.${DOMAIN}"
+      traefik.port: "8080"
+      traefik.frontend.auth.basic: "${HTPASSWD}"
+      restart: unless-stopped
+    networks:
+      - web
+      - internal
+
 
   ouroboros:
     container_name: ouroboros
@@ -292,7 +294,7 @@ services:
       - "6875:80"
       - "6876:443"
     volumes:
-      - "${CONFIG}/bookstack:/config"
+      - ${CONFIG}/bookstack:/config
     environment:
       - PUID
       - PGID
@@ -313,7 +315,7 @@ services:
     container_name: bookstack-db
     hostname: bookstack-db
     volumes:
-      - "${CONFIG}/bookstack-db:/config"
+      - ${CONFIG}/bookstack-db:/config
     environment:
       - PUID
       - PGID
@@ -334,8 +336,8 @@ services:
     ports:
       - "8083:8083"
     volumes:
-      - "${CONFIG}/calibre:/config"
-      - "${BOOKS}:/books"
+      - ${CONFIG}/calibre:/config
+      - ${BOOKS}:/books
     environment:
       - PUID
       - PGID
@@ -354,8 +356,8 @@ services:
       - "51415:49184/udp"
       - "51415:49184/tcp"
     volumes:
-      - "${CONFIG}/rtorrent:/flood-db"
-      - "${TORRENTS}:/data"
+      - ${CONFIG}/rtorrent:/flood-db
+      - ${TORRENTS}:/data
     environment:
       - UID=1026 # Defined differently in container
       - GID=101 # Defined diffrently in container
@@ -371,7 +373,7 @@ services:
     ports:
       - "5050:5000"
     volumes:
-      - "${CONFIG}/dashmachine:/dashmachine/dashmachine/user_data"
+      - ${CONFIG}/dashmachine:/dashmachine/dashmachine/user_data
     environment:
       - PUID
       - PGID
@@ -379,6 +381,45 @@ services:
     restart: unless-stopped
     networks:
       - internal
+
+#############################################################
+### TESTING MONITORING WITH INFLUXDB / GRAFANA / TELAGRAF
+#############################################################
+  # influxdb:
+  #   image: influxdb:latest
+  #   container_name: influxdb
+  #   hostname: influxdb
+  #   ports:
+  #     - "8886:8086"
+  #   volumes:
+  #     - ${CONFIG}/influxdb:/var/lib/influxdb
+  #   environment:
+  #     - PUID
+  #     - PGID
+  #     - TZ
+  #     - INFLUXDB_DB=stats
+  #     - INFLUXDB_ADMIN_USER=chris
+  #     - INFLUXDB_ADMIN_PASSWORD=bijou
+  #   restart: unless-stopped
+  #   networks:
+  #     - internal
+  #     - db
+  #
+  # grafana:
+  #   image: grafana/grafana:latest
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ${CONFIG}/grafana:/var/lib/grafana
+  #   environment:
+  #     - GF_SECURITY_ADMIN_USER=chris
+  #     - GF_SECURITY_ADMIN_PASSWORD=bijou
+  #   depends_on:
+  #     - influxdb
+  #   restart: unless-stopped
+  #   networks:
+  #     - internal
+  #     - db
 
 networks:
   web:
@@ -390,8 +431,3 @@ networks:
   db: #for database using containers
     name: db
     external: false
-
-# For Traefik 2.0
-# volumes:
-#   - ${CONFIG}/traefik/traefik.yml:/traefik.yml
-#   - ${CONFIG}traefik/dynamic_conf.yml:/dynamic_conf.yml
