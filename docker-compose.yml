@@ -30,17 +30,17 @@ services:
     hostname: ouroboros
     image: pyouroboros/ouroboros:latest
     environment:
-    - CLEANUP=true
-    - INTERVAL=300
-    - LOG_LEVEL=info
-    - SELF_UPDATE=true
-    - IGNORE=influxdb mariadb
-    - TZ
+      - CLEANUP=true
+      - INTERVAL=300
+      - LOG_LEVEL=info
+      - SELF_UPDATE=true
+      - IGNORE=influxdb mariadb
+      - TZ
     volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
     networks:
-    - internal
+      - internal
 
   portainer:
     image: portainer/portainer:latest
@@ -48,29 +48,29 @@ services:
     hostname: portainer
     command: -H unix:///var/run/docker.sock
     ports:
-    - 9000:9000
-    - 8000:8000
+    - "9000:9000"
+    - "8000:8000"
     volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-    - ${CONFIG}/portainer:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${CONFIG}/portainer:/data
     restart: unless-stopped
     networks:
-    - internal
+      - internal
 
   nzbget:
     image: linuxserver/nzbget:latest
     container_name: nzbget
     hostname: nzbget
     ports:
-    - "6789:6789"
+      - "6789:6789"
     volumes:
-    - ${CONFIG}/nzbget:/config
-    - ${DOWNLOAD}:/downloads
-    - ${DOWNLOAD}/incomplete:/incomplete-downloads
+      - ${CONFIG}/nzbget:/config
+      - ${DOWNLOAD}:/downloads
+      - ${DOWNLOAD}/incomplete:/incomplete-downloads
     environment:
-    - PGID
-    - PUID
-    - TZ
+      - PGID
+      - PUID
+      - TZ
     # labels:
     #   traefik.enable: "true"
     #   traefik.port: "6789"
@@ -78,22 +78,22 @@ services:
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
     networks:
-    - internal
+      - internal
 
   sonarr:
     image: linuxserver/sonarr:preview
     container_name: sonarr
     hostname: sonarr
     ports:
-    - "8989:8989"
+      - "8989:8989"
     volumes:
-    - ${CONFIG}/sonarr:/config
-    - ${DOWNLOAD}:/downloads
-    - ${TVSHOWS}:/tv
+      - ${CONFIG}/sonarr:/config
+      - ${DOWNLOAD}:/downloads
+      - ${TVSHOWS}:/tv
     environment:
-    - PGID
-    - PUID
-    - TZ
+      - PGID
+      - PUID
+      - TZ
    # labels:
    #  traefik.enable: "true"
    #  traefik.port: "8989"
@@ -101,7 +101,7 @@ services:
    #  traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
     networks:
-    - internal
+      - internal
 
   radarr:
     image: linuxserver/radarr:latest
@@ -124,7 +124,7 @@ services:
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
     networks:
-    - internal
+      - internal
 
   lidarr:
     image: linuxserver/lidarr:latest
@@ -147,13 +147,13 @@ services:
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
     networks:
-    - internal
+      - internal
 
   bazarr:
     image: linuxserver/bazarr:latest
     container_name: bazarr
     ports:
-    - 6767:6767
+    - "6767:6767"
     volumes:
       - ${CONFIG}/bazarr:/config
       - ${TVSHOWS}:/tv
@@ -165,7 +165,7 @@ services:
       - TZ
     restart: unless-stopped
     networks:
-    - internal
+      - internal
 
   nzbhydra2:
     image: linuxserver/hydra2:latest
@@ -187,7 +187,7 @@ services:
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
     networks:
-    - internal
+      - internal
 
   # plex:
   #   image: linuxserver/plex
@@ -238,7 +238,7 @@ services:
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
     networks:
-    - internal
+      - internal
 
   heimdall:
     image: linuxserver/heimdall:latest
@@ -260,8 +260,25 @@ services:
     #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
     networks:
-    - internal
-    - web
+      - internal
+      - web
+
+  homer:
+    image: nx211/docker-homer:latest
+    container_name: homer
+    hostname: homer
+    ports:
+      - "6080:80"
+      - "6443:443"
+    volumes:
+    #- </path/to/appdata/config>:/config # optional for access to nginx config
+      - ${CONFIG}/homer/config.yml:/homer/config.yml
+
+    environment:
+      - PUID
+      - PGID
+      - TZ
+    restart: unless-stopped
 
   ombi:
     image: linuxserver/ombi:latest
@@ -280,68 +297,87 @@ services:
     #   traefik.port: "3579"
     #   traefik.frontend.rule: "Host:ombi.${DOMAIN}"
     networks:
-    - internal
-    - web
+      - internal
+      - web
 
   bookstack:
     image: linuxserver/bookstack:latest
     container_name: bookstack
     hostname: bookstack
     ports:
-    - "6875:80"
-    - "6876:443"
+      - "6875:80"
+      - "6876:443"
     volumes:
-    - "${CONFIG}/bookstack:/config"
+      - "${CONFIG}/bookstack:/config"
     environment:
-    - PUID
-    - PGID
-    - TZ
-    - DB_HOST=bookstack-db
-    - DB_USER=books
-    - DB_PASS=books
-    - DB_DATABASE=bookstack
+      - PUID
+      - PGID
+      - TZ
+      - DB_HOST=bookstack-db
+      - DB_USER=books
+      - DB_PASS=books
+      - DB_DATABASE=bookstack
     depends_on:
-    - bookstack-db
+      - bookstack-db
     restart: unless-stopped
     networks:
-    - internal
-    - db
+      - internal
+      - db
 
   bookstack-db:
     image: linuxserver/mariadb:latest
     container_name: bookstack-db
     hostname: bookstack-db
     volumes:
-    - "${CONFIG}/bookstack-db:/config"
+      - "${CONFIG}/bookstack-db:/config"
     environment:
-    - PUID
-    - PGID
-    - TZ
-    - MYSQL_USER=books
-    - MYSQL_PASSWORD=books
-    - MYSQL_DATABASE=bookstack
-    - MYSQL_ROOT_PASSWORD=bijou
+      - PUID
+      - PGID
+      - TZ
+      - MYSQL_USER=books
+      - MYSQL_PASSWORD=books
+      - MYSQL_DATABASE=bookstack
+      - MYSQL_ROOT_PASSWORD=bijou
     restart: unless-stopped
     networks:
-    - internal
-    - db
+      - internal
+      - db
 
   calibre:
     image: linuxserver/calibre-web:latest
     container_name: calibre
     hostname: calibre
     ports:
-      - 8083:8083
+      - "8083:8083"
     volumes:
-    - ${CONFIG}/calibre:/config
-    - ${BOOKS}:/books
+      - ${CONFIG}/calibre:/config
+      - ${BOOKS}:/books
     environment:
-    - PUID
-    - PGID
-    - TZ
+      - PUID
+      - PGID
+      - TZ
     restart: unless-stopped
     networks:
     - internal
+
+  rtorrent:
+    image: wonderfall/rtorrent-flood:latest
+    container_name: rtorrent
+    hostname: rtorrent
+    ports:
+      - "3000:3000"
+      - "51415:49184/udp"
+      - "51415:49184/tcp"
+    volumes:
+      - ${CONFIG}/rtorrent:/flood-db
+      - ${TORRENTS}:/data
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - FLOOD_SECRET=bijou
+    networks:
+      - internal
 
 networks:
   web:
