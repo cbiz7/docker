@@ -374,8 +374,8 @@ services:
       - "${CONFIG}/rtorrent:/flood-db"
       - "${TORRENTS}:/data"
     environment:
-      - PUID
-      - PGID
+      - UID=1026
+      - GID=101
       - TZ
       - FLOOD_SECRET=bijou
     networks:
