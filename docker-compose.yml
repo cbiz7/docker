@@ -273,12 +273,13 @@ services:
     volumes:
     #- </path/to/appdata/config>:/config # optional for access to nginx config
       - ${CONFIG}/homer/config.yml:/homer/config.yml
-
     environment:
       - PUID
       - PGID
       - TZ
     restart: unless-stopped
+    networks:
+      - internal
 
   ombi:
     image: linuxserver/ombi:latest
