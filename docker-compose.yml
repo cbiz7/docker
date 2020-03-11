@@ -365,7 +365,7 @@ services:
     image: wonderfall/rtorrent-flood:latest
     container_name: rtorrent
     hostname: rtorrent
-    tty: true
+    tty: true # Necessary or rtorrent will use 100% of CPU
     ports:
       - "3000:3000"
       - "51415:49184/udp"
@@ -374,10 +374,26 @@ services:
       - "${CONFIG}/rtorrent:/flood-db"
       - "${TORRENTS}:/data"
     environment:
-      - UID=1026
-      - GID=101
+      - UID=1026 # Defined differently in container
+      - GID=101 # Defined diffrently in container
       - TZ
       - FLOOD_SECRET=bijou
+    networks:
+      - internal
+
+  dashmashine:
+    image: rmountjoy/dashmashine:latest
+    container_name: dashmashine
+    hostname: dashmashine
+    ports:
+      - "5000:5000"
+    volumes:
+      - "${CONFIG}/dash:/dashmachine/dashmachine/user_data"
+    environment:
+      - PUID
+      - PGID
+      - TZ
+    restart: unless-stopped
     networks:
       - internal
 
