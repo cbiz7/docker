@@ -351,8 +351,8 @@ services:
     ports:
       - "8083:8083"
     volumes:
-      - ${CONFIG}/calibre:/config
-      - ${BOOKS}:/books
+      - "${CONFIG}/calibre:/config"
+      - "${BOOKS}:/books"
     environment:
       - PUID
       - PGID
@@ -371,8 +371,8 @@ services:
       - "51415:49184/udp"
       - "51415:49184/tcp"
     volumes:
-      - ${CONFIG}/rtorrent:/flood-db
-      - ${TORRENTS}:/data
+      - "${CONFIG}/rtorrent:/flood-db"
+      - "${TORRENTS}:/data"
     environment:
       - PUID
       - PGID
