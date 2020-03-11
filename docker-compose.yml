@@ -365,6 +365,7 @@ services:
     image: wonderfall/rtorrent-flood:latest
     container_name: rtorrent
     hostname: rtorrent
+    tty: true
     ports:
       - "3000:3000"
       - "51415:49184/udp"
