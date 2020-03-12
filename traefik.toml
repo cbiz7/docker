@@ -31,6 +31,9 @@ OnHostRule = true
 OnDemand = false
   [acme.httpChallenge]
   entryPoint = "http"
+[[acme.domains]]
+  main = "*.jeebs.co"
+  sans = ["jeebs.co"]
 
 [docker]
   endpoint = "unix:///var/run/docker.sock"
