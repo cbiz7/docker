@@ -34,7 +34,7 @@ OnDemand = false
 
 [docker]
   endpoint = "unix:///var/run/docker.sock"
-  # domain = "jeebs.co"
-  domain = "docker.localhost"
+  domain = "jeebs.co"
+  #domain = "docker.localhost"
   watch = true
   network = "web"
