@@ -16,7 +16,6 @@ services:
       - PGID
       - PUID
       - TZ
-      -
     restart: unless-stopped
     networks:
       - web
