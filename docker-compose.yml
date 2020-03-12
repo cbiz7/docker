@@ -96,7 +96,7 @@ services:
       - TZ
     labels:
       - 'traefik.enable=true'
-      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}')"
+      - 'traefik.http.routers.sonarr.rule=Host(`sonarr.jeebs.co`)'
       - 'traefik.http.routers.sonarr.entrypoints=websecure'
       - 'traefik.http.routers.sonarr.tls=true'
       - 'traefik.http.services.sonarr-service.loadbalancer.server.port=8989'
