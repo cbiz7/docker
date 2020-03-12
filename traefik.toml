@@ -17,10 +17,11 @@ defaultEntryPoints = ["https","http"]
   address = ":443"
     [entryPoints.https.tls]
 
+[retry]
+
 [api]
   entrypoint="dashboard"
-
-[retry]
+  dashboard=true
 
 [acme]
 email = "chris.furby@gmail.com"
