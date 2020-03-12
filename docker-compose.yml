@@ -1,25 +1,25 @@
 version: "3.7"
 services:
 
-  traefik:
-    image: traefik:latest
-    container_name: traefik
-    hostname: traefik
-    domainname: ${DOMAIN}
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${CONFIG}/traefik:/etc/traefik:rw
-    environment:
-      - PGID
-      - PUID
-      - TZ
-    restart: unless-stopped
-    networks:
-      - web
-      - internal
+  # traefik:
+  #   image: traefik:latest
+  #   container_name: traefik
+  #   hostname: traefik
+  #   domainname: ${DOMAIN}
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - ${CONFIG}/traefik:/etc/traefik:rw
+  #   environment:
+  #     - PGID
+  #     - PUID
+  #     - TZ
+  #   restart: unless-stopped
+  #   networks:
+  #     - web
+  #     - internal
 
   ouroboros:
     image: pyouroboros/ouroboros:latest
@@ -93,13 +93,13 @@ services:
       - PGID
       - PUID
       - TZ
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.sonarr.rule=Host(`sonarr.jeebs.co`)
-      - traefik.http.routers.sonarr.entrypoints=websecure
-      - traefik.http.routers.sonarr.tls=true
-      - traefik.http.services.sonarr-service.loadbalancer.server.port=8989
-      - traefik.http.services.sonarr-service.loadbalancer.server.scheme=http
+    # labels:
+    #   - traefik.enable=true
+    #   - traefik.http.routers.sonarr.rule=Host(`sonarr.jeebs.co`)
+    #   - traefik.http.routers.sonarr.entrypoints=websecure
+    #   - traefik.http.routers.sonarr.tls=true
+    #   - traefik.http.services.sonarr-service.loadbalancer.server.port=8989
+    #   - traefik.http.services.sonarr-service.loadbalancer.server.scheme=http
     restart: unless-stopped
     networks:
       - internal
