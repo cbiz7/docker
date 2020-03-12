@@ -27,7 +27,6 @@ services:
     hostname: ouroboros
     environment:
       - CLEANUP=true
-      # - INTERVAL=300 / if CRON not defined, runs every 30 seconds.
       - CRON="0 3 * * *" # Check for updates every morning at 3am.
       - LOG_LEVEL=info
       - SELF_UPDATE=true
@@ -68,13 +67,6 @@ services:
       - PGID
       - PUID
       - TZ
-    # labels:
-    #   - "traefik.docker.network=internal"
-    #   - "traefik.enable=true"
-    #   - "traefik.basic.frontend.rule=Host:nzbget.${DOMAIN}"
-    #   - "traefik.basic.port=6789"
-    #   - "traefik.basic.protocol=http"
-    #  - "traefik.frontend.auth.basic=${HTPASSWD}"
     restart: unless-stopped
     networks:
       - internal
@@ -93,7 +85,7 @@ services:
       - PGID
       - PUID
       - TZ
-    # labels:
+    # labels: ## FOR TRAEFIK 2.0
     #   - traefik.enable=true
     #   - traefik.http.routers.sonarr.rule=Host(`sonarr.jeebs.co`)
     #   - traefik.http.routers.sonarr.entrypoints=websecure
@@ -118,11 +110,6 @@ services:
       - PGID
       - PUID
       - TZ
-    # labels:
-    #   traefik.enable: "true"
-    #   traefik.port: "7878"
-    #   traefik.frontend.rule: "Host:radarr.${DOMAIN}"
-    #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
     networks:
       - internal
@@ -141,11 +128,6 @@ services:
     environment:
       - PGID
       - PUID
-    # labels:
-    #   traefik.enable: "true"
-    #   traefik.port: "8686"
-    #   traefik.frontend.rule: "Host:lidarr.${DOMAIN}"
-    #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
     networks:
       - internal
@@ -159,7 +141,6 @@ services:
       - ${CONFIG}/bazarr:/config
       - ${TVSHOWS}:/tv
       - ${MOVIES}:/movies
-    #  - ${4KMOVIES}:/4kmovies
     environment:
       - PGID
       - PUID
@@ -181,11 +162,6 @@ services:
       - PGID
       - PUID
       - TZ
-    # labels:
-    #   traefik.enable: "true"
-    #   traefik.port: "5076"
-    #   traefik.frontend.rule: "Host:nzbhydra.${DOMAIN}"
-    #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
     networks:
       - internal
@@ -232,11 +208,6 @@ services:
       - PGID
       - PUID
       - TZ
-    # labels:
-    #   traefik.enable: "true"
-    #   traefik.port: "8181"
-    #   traefik.frontend.rule: "Host:tautulli.${DOMAIN}"
-    #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
     networks:
       - internal
@@ -254,11 +225,6 @@ services:
       - PGID
       - PUID
       - TZ
-    # labels:
-    #   traefik.enable: "true"
-    #   traefik.port: "80"
-    #   traefik.frontend.rule: "Host:${DOMAIN}"
-    #   traefik.frontend.auth.basic: "${HTPASSWD}"
     restart: unless-stopped
     networks:
       - internal
@@ -276,10 +242,6 @@ services:
       - PGID
       - PUID
       - TZ
-    # labels:
-    #   traefik.enable: "true"
-    #   traefik.port: "3579"
-    #   traefik.frontend.rule: "Host:ombi.${DOMAIN}"
     networks:
       - internal
       - web
@@ -383,41 +345,48 @@ services:
 #############################################################
 ### TESTING MONITORING WITH INFLUXDB / GRAFANA / TELAGRAF
 #############################################################
-  # influxdb:
-  #   image: influxdb:latest
-  #   container_name: influxdb
-  #   hostname: influxdb
-  #   ports:
-  #     - "8886:8086"
-  #   volumes:
-  #     - ${CONFIG}/influxdb:/var/lib/influxdb
-  #   environment:
-  #     - PUID
-  #     - PGID
-  #     - TZ
-  #     - INFLUXDB_DB=stats
-  #     - INFLUXDB_ADMIN_USER=chris
-  #     - INFLUXDB_ADMIN_PASSWORD=bijou
-  #   restart: unless-stopped
-  #   networks:
-  #     - internal
-  #     - db
-  #
-  # grafana:
-  #   image: grafana/grafana:latest
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - ${CONFIG}/grafana:/var/lib/grafana
-  #   environment:
-  #     - GF_SECURITY_ADMIN_USER=chris
-  #     - GF_SECURITY_ADMIN_PASSWORD=bijou
-  #   depends_on:
-  #     - influxdb
-  #   restart: unless-stopped
-  #   networks:
-  #     - internal
-  #     - db
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    hostname: influxdb
+    command: '-config /etc/influxdb/influxdb.conf'
+    ports:
+      - "8886:8086" # HTTP API port
+      - '2003:2003' # Graphite support if enabled
+      - '25826:25826' # Collectd support if enabled
+      - '4242:4242' # opentsdb support if enabled
+      - '8089:8089/udp' # UDP support if enabled
+    volumes:
+      - ${CONFIG}/influxdb:/var/lib/influxdb
+      - ${CONFIG}/influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+      - ${CONFIG}/influxdb/init:/docker-entrypoint-initdb.d:ro
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - INFLUXDB_DB=stats
+      - INFLUXDB_ADMIN_USER=chris
+      - INFLUXDB_ADMIN_PASSWORD=bijou
+    restart: unless-stopped
+    networks:
+      - internal
+      - db
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ${CONFIG}/grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=chris
+      - GF_SECURITY_ADMIN_PASSWORD=bijou
+    depends_on:
+      - influxdb
+    restart: unless-stopped
+    networks:
+      - internal
+      - db
 
 networks:
   web:
