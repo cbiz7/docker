@@ -381,6 +381,9 @@ services:
     volumes:
       - ${CONFIG}/grafana:/var/lib/grafana
     environment:
+      - PUID
+      - PGID
+      - TZ
       - GF_SECURITY_ADMIN_USER=chris
       - GF_SECURITY_ADMIN_PASSWORD=bijou
       - GF_USERS_ALLOW_SIGN_UP=false
@@ -412,6 +415,9 @@ services:
       - /proc:/rootfs/proc:ro
       - /etc:/rootfs/etc:ro
     environment:
+      - PUID
+      - PGID
+      - TZ
       - HOST_SYS=/rootfs/sys
       - HOST_PROC=/rootfs/proc
       - HOST_ETC=/rootfs/etc
