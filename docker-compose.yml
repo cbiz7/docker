@@ -345,48 +345,48 @@ services:
 #############################################################
 ### TESTING MONITORING WITH INFLUXDB / GRAFANA / TELAGRAF
 #############################################################
-  influxdb:
-    image: influxdb:latest
-    container_name: influxdb
-    hostname: influxdb
-    command: '-config /etc/influxdb/influxdb.conf'
-    ports:
-      - "8886:8086" # HTTP API port
-      - '2003:2003' # Graphite support if enabled
-      - '25826:25826' # Collectd support if enabled
-      - '4242:4242' # opentsdb support if enabled
-      - '8089:8089/udp' # UDP support if enabled
-    volumes:
-      - ${CONFIG}/influxdb:/var/lib/influxdb
-      - ${CONFIG}/influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
-      - ${CONFIG}/influxdb/init:/docker-entrypoint-initdb.d:ro
-    environment:
-      - PUID
-      - PGID
-      - TZ
-      - INFLUXDB_DB=stats
-      - INFLUXDB_ADMIN_USER=chris
-      - INFLUXDB_ADMIN_PASSWORD=bijou
-    restart: unless-stopped
-    networks:
-      - internal
-      - db
-
-  grafana:
-    image: grafana/grafana:latest
-    ports:
-      - "3000:3000"
-    volumes:
-      - ${CONFIG}/grafana:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_USER=chris
-      - GF_SECURITY_ADMIN_PASSWORD=bijou
-    depends_on:
-      - influxdb
-    restart: unless-stopped
-    networks:
-      - internal
-      - db
+  # influxdb:
+  #   image: influxdb:latest
+  #   container_name: influxdb
+  #   hostname: influxdb
+  #   command: '-config /etc/influxdb/influxdb.conf'
+  #   ports:
+  #     - "8886:8086" # HTTP API port
+  #     - '2003:2003' # Graphite support if enabled
+  #     - '25826:25826' # Collectd support if enabled
+  #     - '4242:4242' # opentsdb support if enabled
+  #     - '8089:8089/udp' # UDP support if enabled
+  #   volumes:
+  #     - ${CONFIG}/influxdb:/var/lib/influxdb
+  #     - ${CONFIG}/influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+  #     - ${CONFIG}/influxdb/init:/docker-entrypoint-initdb.d:ro
+  #   environment:
+  #     - PUID
+  #     - PGID
+  #     - TZ
+  #     - INFLUXDB_DB=stats
+  #     - INFLUXDB_ADMIN_USER=chris
+  #     - INFLUXDB_ADMIN_PASSWORD=bijou
+  #   restart: unless-stopped
+  #   networks:
+  #     - internal
+  #     - db
+  #
+  # grafana:
+  #   image: grafana/grafana:latest
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ${CONFIG}/grafana:/var/lib/grafana
+  #   environment:
+  #     - GF_SECURITY_ADMIN_USER=chris
+  #     - GF_SECURITY_ADMIN_PASSWORD=bijou
+  #   depends_on:
+  #     - influxdb
+  #   restart: unless-stopped
+  #   networks:
+  #     - internal
+  #     - db
 
 networks:
   web:
