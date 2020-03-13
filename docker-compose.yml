@@ -349,7 +349,7 @@ services:
     image: influxdb:latest
     container_name: influxdb
     hostname: influxdb
-    command:  -config /etc/influxdb/influxdb.conf"
+    command:  '-config /etc/influxdb/influxdb.conf'
     ports:
       - "8886:8086" # HTTP API port
       - "2003:2003" # Graphite support if enabled
