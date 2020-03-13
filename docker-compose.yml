@@ -351,6 +351,7 @@ services:
     hostname: influxdb
     command:  '-config /etc/influxdb/influxdb.conf'
     ports:
+      - "8883:8083" # Web GUI
       - "8886:8086" # HTTP API port
       # - "2003:2003" # Graphite support if enabled
       # - "25826:25826" # Collectd support if enabled
