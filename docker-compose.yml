@@ -167,10 +167,11 @@ services:
       - internal
 
   plex:
-    image: linuxserver/plex
+    image: linuxserver/plex:latest
     container_name: plex
     hostname: plex
     network_mode: host
+    command: --device=/dev/dri:/dev/dri
     # ports: # Not needed because running net=host.
     #   - "32400:32400"
     #   - "32400:32400/udp"
