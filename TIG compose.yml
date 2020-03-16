@@ -1,0 +1,88 @@
+version: "3.7"
+services:
+
+#############################################################
+### TESTING MONITORING WITH INFLUXDB / GRAFANA / TELAGRAF
+#############################################################
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    hostname: influxdb
+    command:  '-config /etc/influxdb/influxdb.conf'
+    ports:
+      - "8886:8086" # HTTP API port
+      # - "2003:2003" # Graphite support if enabled
+      # - "25826:25826" # Collectd support if enabled
+      # - "4242:4242" # opentsdb support if enabled
+      # - "8089:8089/udp" # UDP support if enabled
+    volumes:
+      - ${CONFIG}/influxdb:/var/lib/influxdb
+      - ${CONFIG}/influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+      - ${CONFIG}/influxdb/init:/docker-entrypoint-initdb.d:ro
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - INFLUXDB_DB=telegraf
+      - INFLUXDB_ADMIN_USER=chris
+      - INFLUXDB_ADMIN_PASSWORD=bijou
+    restart: unless-stopped
+    networks:
+      - internal
+      - db
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    hostname: grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - ${CONFIG}/grafana:/var/lib/grafana
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - GF_SECURITY_ADMIN_USER=chris
+      - GF_SECURITY_ADMIN_PASSWORD=bijou
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_USERS_ALLOW_ORG_CREATE=false
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+    depends_on:
+      - influxdb
+    restart: unless-stopped
+    networks:
+      - internal
+      - db
+
+  #  The plugin-driven server agent for collecting & reporting metrics.
+  telegraf:
+    image: telegraf:alpine
+    container_name: telegraf
+    hostname: telegraf
+    # ports:
+      # - "8125:8125" # For StatsD plugin
+      # - "8092:8092/udp" # Image opened this. Don't know what's for.
+      # - "8094:8094" # putouts.socket_writer
+    volumes:
+      - ${CONFIG}/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      # -=- Host-monitoring-in-container config start -=-
+      # See also: https://www.jacobtomlinson.co.uk/monitoring/2016/06/23/running-telegraf-inside-a-container/
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys:/rootfs/sys:ro
+      - /proc:/rootfs/proc:ro
+      - /etc:/rootfs/etc:ro
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - HOST_SYS=/rootfs/sys
+      - HOST_PROC=/rootfs/proc
+      - HOST_ETC=/rootfs/etc
+      # -=- Host-monitoring-in-container config end -=-
+    # links:
+    #   - influxdb
+    networks:
+      - internal
+      - db
