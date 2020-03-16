@@ -179,9 +179,9 @@ services:
     #   - "1900:1900/udp"
     volumes:
       - ${CONFIG}/plex:/config
-      - "${TVSHOWS}:/TV Shows"
-      - "${MOVIES}:/Movies"
-      - "${$4KMOVIES}:/4K Movies"
+      - ${TVSHOWS}:/TV Shows
+      - ${MOVIES}:/Movies
+      - ${$4KMOVIES}:/4K Movies
     environment:
       - PGID
       - PUID
