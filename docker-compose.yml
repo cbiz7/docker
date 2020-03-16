@@ -166,35 +166,29 @@ services:
     networks:
       - internal
 
-  # plex:
-  #   image: linuxserver/plex
-  #   container_name: plex
-  #   hostname: plex
-  #   ports:
-  #     - "32400:32400"
-  #     - "32400:32400/udp"
-  #     - "32469:32469"
-  #     - "32469:32469/udp"
-  #     - "1900:1900/udp"
-  #   volumes:
-  #     - ${CONFIG}/plex:/config
-  #     - ${DATA}/tv:/media/tv
-  #     - ${DATA}/movies:/media/movies
-  #     - ${DATA}/music:/media/music
-  #   environment:
-  #     - PGID
-  #     - PUID
-  #     - TZ
-  #     - VERSION=latest
-  #   # labels:
-  #   #   traefik.enable: "true"
-  #   #   traefik.port: "32400"
-  #   #   traefik.frontend.rule: "Host:plex.${DOMAIN}"
-  #   restart: unless-stopped
-  # networks:
-  # - internal
-  # - web
-  #
+  plex:
+    image: linuxserver/plex
+    container_name: plex
+    hostname: plex
+    network_mode: host
+    # ports: # Not needed because running net=host.
+    #   - "32400:32400"
+    #   - "32400:32400/udp"
+    #   - "32469:32469"
+    #   - "32469:32469/udp"
+    #   - "1900:1900/udp"
+    volumes:
+      - ${CONFIG}/plex:/config
+      - "${TVSHOWS}:/TV Shows"
+      - "${MOVIES}:/Movies"
+      - "${$4KMOVIES}:/4K Movies"
+    environment:
+      - PGID
+      - PUID
+      - TZ
+      - VERSION=latest
+    restart: unless-stopped
+
   tautulli:
     image: linuxserver/tautulli:latest
     container_name: tautulli
