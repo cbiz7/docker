@@ -171,7 +171,8 @@ services:
     container_name: plex
     hostname: plex
     network_mode: host
-    command: --device=/dev/dri:/dev/dri
+    devices:
+      - "/dev/dri:/dev/dri" # to enable hardware acceleration
     # ports: # Not needed because running net=host.
     #   - "32400:32400"
     #   - "32400:32400/udp"
