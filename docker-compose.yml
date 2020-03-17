@@ -201,7 +201,7 @@ services:
       - ${CONFIG}/plex:/config
       - ${TVSHOWS}:/TV Shows
       - ${MOVIES}:/Movies
-      - /volume1/Media/4K Movies:/4K Movies # env variable not working for this path.
+      - ${MOVIES4K}:/4K Movies # env variable not working for this path.
     environment:
       - PGID
       - PUID
