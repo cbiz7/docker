@@ -123,7 +123,7 @@ services:
     volumes:
       - ${CONFIG}/radarr4k:/config
       - ${DOWNLOAD}:/downloads
-      - ${4KMOVIES}:/movies
+      - ${MOVIES4K}:/movies
     environment:
       - PGID
       - PUID
