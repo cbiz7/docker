@@ -96,16 +96,34 @@ services:
     networks:
       - internal
 
-  radarr:
+  radarrhd:
     image: linuxserver/radarr:latest
-    container_name: radarr
-    hostname: radarr
+    container_name: radarrhd
+    hostname: radarrhd
     ports:
       - "7878:7878"
     volumes:
-      - ${CONFIG}/radarr:/config
+      - ${CONFIG}/radarrhd:/config
       - ${DOWNLOAD}:/downloads
       - ${MOVIES}:/movies
+    environment:
+      - PGID
+      - PUID
+      - TZ
+    restart: unless-stopped
+    networks:
+      - internal
+
+  radarr4k:
+    image: linuxserver/radarr:latest
+    container_name: radarr4k
+    hostname: radarr4k
+    ports:
+      - "7979:7878"
+    volumes:
+      - ${CONFIG}/radarr4k:/config
+      - ${DOWNLOAD}:/downloads
+      - ${4KMOVIES}:/movies
     environment:
       - PGID
       - PUID
