@@ -114,23 +114,23 @@ services:
     networks:
       - internal
 
-  radarr4k:
-    image: linuxserver/radarr:latest
-    container_name: radarr4k
-    hostname: radarr4k
-    ports:
-      - "7979:7878"
-    volumes:
-      - ${CONFIG}/radarr4k:/config
-      - ${DOWNLOAD}:/downloads
-      - ${MOVIES4K}:/movies
-    environment:
-      - PGID
-      - PUID
-      - TZ
-    restart: unless-stopped
-    networks:
-      - internal
+  # radarr4k:
+  #   image: linuxserver/radarr:latest
+  #   container_name: radarr4k
+  #   hostname: radarr4k
+  #   ports:
+  #     - "7979:7878"
+  #   volumes:
+  #     - ${CONFIG}/radarr4k:/config
+  #     - ${DOWNLOAD}:/downloads
+  #     - ${MOVIES4K}:/movies
+  #   environment:
+  #     - PGID
+  #     - PUID
+  #     - TZ
+  #   restart: unless-stopped
+  #   networks:
+  #     - internal
 
   lidarr:
     image: linuxserver/lidarr:latest
