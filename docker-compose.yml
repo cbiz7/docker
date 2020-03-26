@@ -374,6 +374,19 @@ services:
     networks:
       - internal
 
+  ghost:
+    image: ghost:latest
+    container_name: ghost
+    hostname: ghost
+    ports:
+      - "2368:2368"
+    volumes:
+      - ${CONFIG}/ghost:/var/lib/ghost/content
+    environment:
+      - PUID
+      - PGID
+      - TZ
+
 networks:
   web:
     name: web
