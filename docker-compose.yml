@@ -386,6 +386,8 @@ services:
       - PUID
       - PGID
       - TZ
+    networks:
+      - internal
 
 networks:
   web:
