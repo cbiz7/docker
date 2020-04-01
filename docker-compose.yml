@@ -418,6 +418,44 @@ services:
       - internal
       - db
 
+  piwigo:
+    image: linuxserver/piwigo:latest
+    container_name: piwigo
+    hostname: piwigo
+    ports:
+      - "5080:80"
+    volumes:
+      - ${CONFIG}/piwigo/config:/config
+      - ${CONFIG}/piwogo/gallery:/config/www/gallery/galleries
+    environment:
+      - PUID
+      - PGID
+      - TZ
+    depends_on:
+      - piwigo-db
+    networks:
+      - internal
+      - db
+
+  piwigo-db:
+    image: linuxserver/mariadb:latest
+    container_name: piwigo-db
+    hostname: piwigo-db
+    volumes:
+      - ${CONFIG}/piwigo-db:/config
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - MYSQL_USER=piwigo
+      - MYSQL_PASSWORD=piwigo
+      - MYSQL_DATABASE=piwigodb
+      - MYSQL_ROOT_PASSWORD=bijou
+    restart: unless-stopped
+    networks:
+      - internal
+      - db
+
 networks:
   web:
     name: web
