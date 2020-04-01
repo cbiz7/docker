@@ -382,7 +382,7 @@ services:
       - "2368:2368"
     volumes:
       - ${CONFIG}/ghost:/var/lib/ghost/content
-      - ${CONFIG}/ghost/config.production.json:/var/lib/ghost/config.production.json
+    #  - ${CONFIG}/ghost/config.production.json:/var/lib/ghost/config.production.json
     environment:
       - PUID
       - PGID
@@ -392,6 +392,7 @@ services:
       - database__connection__user=ghost
       - database__connection__password=ghost
       - database__connection__database=ghostdb
+      - url=http://10.0.1.11:2368
     depends_on:
       - ghost-db
     networks:
