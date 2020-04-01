@@ -423,7 +423,7 @@ services:
     container_name: piwigo
     hostname: piwigo
     ports:
-      - "5080:80"
+      - "3080:80"
     volumes:
       - ${CONFIG}/piwigo/config:/config
       - ${CONFIG}/piwogo/gallery:/config/www/gallery/galleries
