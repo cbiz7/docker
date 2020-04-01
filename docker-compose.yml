@@ -387,11 +387,11 @@ services:
       - PUID
       - PGID
       - TZ
-      - database__client: mysql
-      - database__connection__host: ghost-db
-      - database__connection__user: ghost
-      - database__connection__password: ghost
-      - database__connection__database: ghostdb
+      - database__client=mysql
+      - database__connection__host=ghost-db
+      - database__connection__user=ghost
+      - database__connection__password=ghost
+      - database__connection__database=ghostdb
     depends_on:
       - ghost-db
     networks:
