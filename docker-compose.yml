@@ -456,6 +456,53 @@ services:
       - internal
       - db
 
+  minecraft:
+    image: itzg/minecraft-server:latest
+    ports:
+      - "25565:25565"
+      - "25575:25575"
+    volumes:
+      - ${CONFIG}/minecraft:/data
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - EULA=true
+      - ENABLE_RCON=true
+      - RCON_PASSWORD=bijou
+      - RCON_PORT=25575
+      - MEMORY=2G
+      - LEVEL=world
+      - TYPE=FABRIC
+      - VERSION=1.14.4
+      - FABRICVERSION=LATEST
+      - SEED=600000222763165
+      - MOTD=THUNDERDOME MOTHERFUCKERS
+      - SERVER_NAME=THUNDERDOME
+      # enable env variable replacement
+      - REPLACE_ENV_VARIABLES=false
+      # define an optional prefix for your env variables you want to replace
+      - ENV_VARIABLE_PREFIX=CFG_
+      # and here are the actual variables
+    restart: unless-stopped
+    networks:
+      - internal
+      - web
+
+  rcon:
+    image: itzg/rcon
+    ports:
+      - "4326:4326"
+      - "4327:4327"
+    volumes:
+      - "${CONFIG}/mc-rcon:/opt/rcon-web-admin/db"
+    depends_on:
+      - minecraft
+    restart: unless-stopped
+    networks:
+      - internal
+      - web
+
 networks:
   web:
     name: web
