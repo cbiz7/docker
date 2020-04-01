@@ -418,47 +418,49 @@ services:
       - internal
       - db
 
-  piwigo:
-    image: linuxserver/piwigo:latest
-    container_name: piwigo
-    hostname: piwigo
-    ports:
-      - "3080:80"
-    volumes:
-      - ${CONFIG}/piwigo/config:/config
-      - ${CONFIG}/piwigo/gallery:/config/www/gallery/galleries
-    environment:
-      - PUID
-      - PGID
-      - TZ
-    restart: unless-stopped
-    depends_on:
-      - piwigo-db
-    networks:
-      - internal
-      - db
-
-  piwigo-db:
-    image: linuxserver/mariadb:latest
-    container_name: piwigo-db
-    hostname: piwigo-db
-    volumes:
-      - ${CONFIG}/piwigo-db:/config
-    environment:
-      - PUID
-      - PGID
-      - TZ
-      - MYSQL_USER=piwigo
-      - MYSQL_PASSWORD=piwigo
-      - MYSQL_DATABASE=piwigodb
-      - MYSQL_ROOT_PASSWORD=bijou
-    restart: unless-stopped
-    networks:
-      - internal
-      - db
+  # piwigo:
+  #   image: linuxserver/piwigo:latest
+  #   container_name: piwigo
+  #   hostname: piwigo
+  #   ports:
+  #     - "3080:80"
+  #   volumes:
+  #     - ${CONFIG}/piwigo/config:/config
+  #     - ${CONFIG}/piwigo/gallery:/config/www/gallery/galleries
+  #   environment:
+  #     - PUID
+  #     - PGID
+  #     - TZ
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - piwigo-db
+  #   networks:
+  #     - internal
+  #     - db
+  #
+  # piwigo-db:
+  #   image: linuxserver/mariadb:latest
+  #   container_name: piwigo-db
+  #   hostname: piwigo-db
+  #   volumes:
+  #     - ${CONFIG}/piwigo-db:/config
+  #   environment:
+  #     - PUID
+  #     - PGID
+  #     - TZ
+  #     - MYSQL_USER=piwigo
+  #     - MYSQL_PASSWORD=piwigo
+  #     - MYSQL_DATABASE=piwigodb
+  #     - MYSQL_ROOT_PASSWORD=bijou
+  #   restart: unless-stopped
+  #   networks:
+  #     - internal
+  #     - db
 
   minecraft:
     image: itzg/minecraft-server:latest
+    container_name: minecraft
+    hostname: minecraft
     ports:
       - "25565:25565"
       - "25575:25575"
@@ -491,7 +493,9 @@ services:
       - web
 
   rcon:
-    image: itzg/rcon
+    image: itzg/rcon:latest
+    container_name: mc-rcon
+    hostname: mc-rcon
     ports:
       - "4326:4326"
       - "4327:4327"
