@@ -475,7 +475,7 @@ services:
       - RCON_PASSWORD=bijou
       - RCON_PORT=25575
       - MEMORY=2G
-      - LEVEL=worldS
+      - LEVEL=world
       - TYPE=FABRIC
       - VERSION=1.14.4
       - FABRICVERSION=LATEST
