@@ -431,6 +431,7 @@ services:
       - PUID
       - PGID
       - TZ
+    restart: unless-stopped
     depends_on:
       - piwigo-db
     networks:
@@ -472,7 +473,7 @@ services:
       - RCON_PASSWORD=bijou
       - RCON_PORT=25575
       - MEMORY=2G
-      - LEVEL=world
+      - LEVEL=worldS
       - TYPE=FABRIC
       - VERSION=1.14.4
       - FABRICVERSION=LATEST
