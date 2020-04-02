@@ -96,7 +96,7 @@ services:
     networks:
       - internal
 
-  radarr-hd:
+  radarrhd:
     image: linuxserver/radarr:latest
     container_name: radarrhd
     hostname: radarrhd
