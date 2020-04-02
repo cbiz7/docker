@@ -96,7 +96,7 @@ services:
     networks:
       - internal
 
-  radarrhd:
+  radarr-hd:
     image: linuxserver/radarr:latest
     container_name: radarrhd
     hostname: radarrhd
@@ -114,32 +114,14 @@ services:
     networks:
       - internal
 
-  # radarr4k:
-  #   image: linuxserver/radarr:latest
-  #   container_name: radarr4k
-  #   hostname: radarr4k
-  #   ports:
-  #     - "7979:7878"
-  #   volumes:
-  #     - ${CONFIG}/radarr4k:/config
-  #     - ${DOWNLOAD}:/downloads
-  #     - ${MOVIES4K}:/movies
-  #   environment:
-  #     - PGID
-  #     - PUID
-  #     - TZ
-  #   restart: unless-stopped
-  #   networks:
-  #     - internal
-
-  watcher3: # Testing for 4K movies only
-    image: barbequesauce/watcher3:latest
-    container_name: watcher3
-    hostname: watcher3
+  radarr-4k:
+    image: linuxserver/radarr:latest
+    container_name: radarr4k
+    hostname: radarr4k
     ports:
-      - "9090:9090"
+      - "7979:7878"
     volumes:
-      - ${CONFIG}/watcher3:/config
+      - ${CONFIG}/radarr4k:/config
       - ${DOWNLOAD}:/downloads
       - ${MOVIES4K}:/movies
     environment:
@@ -149,6 +131,24 @@ services:
     restart: unless-stopped
     networks:
       - internal
+
+  # watcher3: # Testing for 4K movies only
+  #   image: barbequesauce/watcher3:latest
+  #   container_name: watcher3
+  #   hostname: watcher3
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ${CONFIG}/watcher3:/config
+  #     - ${DOWNLOAD}:/downloads
+  #     - ${MOVIES4K}:/movies
+  #   environment:
+  #     - PGID
+  #     - PUID
+  #     - TZ
+  #   restart: unless-stopped
+  #   networks:
+  #     - internal
 
   lidarr:
     image: linuxserver/lidarr:latest
