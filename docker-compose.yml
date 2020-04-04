@@ -341,23 +341,6 @@ services:
     networks:
     - internal
 
-  cops: # Calbre-web alternative
-    image: linuxserver/cops:latest
-    container_name: cops
-    hostname: cops
-    volumes:
-      - ${CONFIG}/cops:/config
-      - ${BOOKS}:/books
-    environment:
-      - PUID
-      - PGID
-      - TZ
-    ports:
-      - 8084:80
-    restart: unless-stopped
-    networks:
-    - internal
-
   rtorrent:
     image: wonderfall/rtorrent-flood:latest
     container_name: rtorrent
