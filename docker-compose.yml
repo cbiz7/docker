@@ -202,6 +202,23 @@ services:
     networks:
       - internal
 
+  jackett:
+    image: linuxserver/jackett:latest
+    container_name: jackett
+    hostname: jackett
+    ports:
+      - "9117:9117"
+    volumes:
+      - ${CONFIG}/jackett:/config
+      - ${TORRENTS}:/downloads
+    environment:
+      - PUID
+      - PGID
+      - TZ
+    restart: unless-stopped
+    networks:
+      - internal
+
   plex:
     image: linuxserver/plex:latest
     container_name: plex
@@ -420,6 +437,8 @@ services:
     networks:
       - internal
       - db
+
+
 
   # minecraft:
   #   image: itzg/minecraft-server:latest
