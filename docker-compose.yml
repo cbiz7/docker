@@ -398,7 +398,7 @@ services:
     container_name: headphones
     hostname: headphones
     ports:
-      - "8181:8181"
+      - "8282:8181"
     volumes:
       - ${CONFIG}/headphones:/config
       - ${DOWNLOAD}:/downloads
