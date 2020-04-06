@@ -338,7 +338,6 @@ services:
       - MYSQL_ROOT_PASSWORD=bijou
     restart: unless-stopped
     networks:
-      - internal
       - db
 
   calibre:
@@ -394,6 +393,24 @@ services:
     networks:
       - internal
 
+  headphones:
+    image: linuxserver/headphones:latest
+    container_name: headphones
+    hostname: headphones
+    ports:
+      - "8181:8181"
+    volumes:
+      - ${CONFIG}/headphones:/config
+      - ${DOWNLOAD}:/downloads
+      - ${MUSIC}:/music
+    environment:
+      - PUID
+      - PGID
+      - TZ
+    restart: unless-stopped
+    networks:
+      - internal
+
   ghost:
     image: ghost:latest
     container_name: ghost
@@ -435,10 +452,7 @@ services:
       - MYSQL_ROOT_PASSWORD=bijou
     restart: unless-stopped
     networks:
-      - internal
       - db
-
-
 
   # minecraft:
   #   image: itzg/minecraft-server:latest
@@ -474,7 +488,7 @@ services:
   #   networks:
   #     - internal
   #     - web
-  #
+
 networks:
   web:
     name: web
@@ -482,6 +496,6 @@ networks:
   internal:
     name: internal
     external: false
-  db: #for database using containers
+  db: # for containers using databases
     name: db
     external: false
