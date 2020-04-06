@@ -27,7 +27,7 @@ services:
     hostname: ouroboros
     environment:
       - CLEANUP=true
-      - CRON="0 3 * * *" # Check for updates every morning at 3am.
+      - CRON=0 3 * * * # Check for updates every morning at 3am.
       - LOG_LEVEL=info
       - SELF_UPDATE=true
       - IGNORE="rtorrent"
