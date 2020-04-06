@@ -393,24 +393,6 @@ services:
     networks:
       - internal
 
-  headphones:
-    image: linuxserver/headphones:latest
-    container_name: headphones
-    hostname: headphones
-    ports:
-      - "8282:8181"
-    volumes:
-      - ${CONFIG}/headphones:/config
-      - ${DOWNLOAD}:/downloads
-      - ${MUSIC}:/music
-    environment:
-      - PUID
-      - PGID
-      - TZ
-    restart: unless-stopped
-    networks:
-      - internal
-
   ghost:
     image: ghost:latest
     container_name: ghost
