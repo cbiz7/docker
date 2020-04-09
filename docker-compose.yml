@@ -25,7 +25,7 @@ services:
     image: jc21/nginx-proxy-manager:latest
     container_name: npm
     hostname: npm
-    #environment:
+    # environment:
       # Uncomment this if IPv6 is not enabled on your host
       # DISABLE_IPV6: 'true'
     volumes:
@@ -37,7 +37,7 @@ services:
       - "80:80"
       - "443:443"
       # Admin Web Port:
-      - "81:81"
+      - "8081:81"
     restart: always
     depends_on:
       - npm-db
