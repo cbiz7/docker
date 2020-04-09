@@ -30,33 +30,35 @@ npm:
     # DISABLE_IPV6: 'true'
   volumes:
     # Make sure this config.json file exists as per instructions above:
-    - ./config.json:/app/config/production.json
-    - ./data:/data
-    - ./letsencrypt:/etc/letsencrypt
+    - ${CONFIG}/config.json:/app/config/production.json
+    - ${CONFIG}/data:/data
+    - ${CONFIG}/letsencrypt:/etc/letsencrypt
   ports:
-    # Public HTTP Port:
     - "80:80"
-    # Public HTTPS Port:
     - "443:443"
     # Admin Web Port:
     - "81:81"
   restart: always
   depends_on:
     - npm-db
+  networks:
+    - web
+    - internal
+    - db
 
   npm-db:
     image: linuxserver/mariadb:latest
     container_name: npm-db
     hostname: npm-db
     volumes:
-      - ${CONFIG}/npm-db:/config
+      - ${CONFIG}/npm/data:/var/lib/mysql
     environment:
       - PUID
       - PGID
       - TZ
-      - MYSQL_USER=books
-      - MYSQL_PASSWORD=books
-      - MYSQL_DATABASE=bookstack
+      - MYSQL_USER=npm
+      - MYSQL_PASSWORD=npm
+      - MYSQL_DATABASE=npm
       - MYSQL_ROOT_PASSWORD=bijou
     restart: unless-stopped
     networks:
