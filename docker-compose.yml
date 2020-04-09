@@ -57,7 +57,7 @@ services:
       - PGID
       - TZ
       - MYSQL_USER=npm
-      - MYSQL_PASSWORD=npm
+      - MYSQL_PASSWORD=bijou
       - MYSQL_DATABASE=npm
       - MYSQL_ROOT_PASSWORD=bijou
     restart: unless-stopped
