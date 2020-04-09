@@ -21,30 +21,30 @@ services:
 #       - web
 #       - internal
 
-npm:
-  image: jc21/nginx-proxy-manager:latest
-  container_name: npm
-  hostname: npm
-  environment:
-    # Uncomment this if IPv6 is not enabled on your host
-    # DISABLE_IPV6: 'true'
-  volumes:
-    # Make sure this config.json file exists as per instructions above:
-    - ${CONFIG}/config.json:/app/config/production.json
-    - ${CONFIG}/data:/data
-    - ${CONFIG}/letsencrypt:/etc/letsencrypt
-  ports:
-    - "80:80"
-    - "443:443"
-    # Admin Web Port:
-    - "81:81"
-  restart: always
-  depends_on:
-    - npm-db
-  networks:
-    - web
-    - internal
-    - db
+  npm:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: npm
+    hostname: npm
+    environment:
+      # Uncomment this if IPv6 is not enabled on your host
+      # DISABLE_IPV6: 'true'
+    volumes:
+      # Make sure this config.json file exists as per instructions above:
+      - ${CONFIG}/config.json:/app/config/production.json
+      - ${CONFIG}/data:/data
+      - ${CONFIG}/letsencrypt:/etc/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+      # Admin Web Port:
+      - "81:81"
+    restart: always
+    depends_on:
+      - npm-db
+    networks:
+      - web
+      - internal
+      - db
 
   npm-db:
     image: linuxserver/mariadb:latest
