@@ -11,7 +11,7 @@ services:
 #       - "443:443"
 #     volumes:
 #       - /var/run/docker.sock:/var/run/docker.sock:ro
-#       - ${CONFIG}/traefik:/etc/traefik:rw
+#       - ${CONFIG}/traefik:/etc/traefik
 #     environment:
 #       - PGID
 #       - PUID
@@ -20,6 +20,47 @@ services:
 #     networks:
 #       - web
 #       - internal
+
+npm:
+  image: jc21/nginx-proxy-manager:latest
+  container_name: npm
+  hostname: npm
+  environment:
+    # Uncomment this if IPv6 is not enabled on your host
+    # DISABLE_IPV6: 'true'
+  volumes:
+    # Make sure this config.json file exists as per instructions above:
+    - ./config.json:/app/config/production.json
+    - ./data:/data
+    - ./letsencrypt:/etc/letsencrypt
+  ports:
+    # Public HTTP Port:
+    - "80:80"
+    # Public HTTPS Port:
+    - "443:443"
+    # Admin Web Port:
+    - "81:81"
+  restart: always
+  depends_on:
+    - npm-db
+
+  npm-db:
+    image: linuxserver/mariadb:latest
+    container_name: npm-db
+    hostname: npm-db
+    volumes:
+      - ${CONFIG}/npm-db:/config
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - MYSQL_USER=books
+      - MYSQL_PASSWORD=books
+      - MYSQL_DATABASE=bookstack
+      - MYSQL_ROOT_PASSWORD=bijou
+    restart: unless-stopped
+    networks:
+      - db
 
   ouroboros:
     image: pyouroboros/ouroboros:latest
