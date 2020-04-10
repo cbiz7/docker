@@ -5,7 +5,6 @@ services:
     image: traefik:latest
     container_name: traefik
     hostname: traefik
-#    domainname: ${DOMAIN}
     ports:
       - "80:80"
       - "443:443"
@@ -168,13 +167,13 @@ services:
       - PGID
       - PUID
       - TZ
-    labels:
-      # Creates a router that listens on the https entrypoint
-      - traefik.http.routers.service-ssl.entryPoints=https
-      - traefik.http.routers.service-ssl.rule=host(`sonarr.${DOMAIN}`)
-      # Enables TLS on this router
-      - traefik.http.routers.service-ssl.tls=true
-      - traefik.http.routers.service-ssl.tls.certResolver=le
+    # labels:
+    #   # Creates a router that listens on the https entrypoint
+    #   - traefik.http.routers.service-ssl.entryPoints=https
+    #   - traefik.http.routers.service-ssl.rule=host(`sonarr.${DOMAIN}`)
+    #   # Enables TLS on this router
+    #   - traefik.http.routers.service-ssl.tls=true
+    #   - traefik.http.routers.service-ssl.tls.certResolver=le
     restart: unless-stopped
     networks:
       - internal
