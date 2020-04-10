@@ -20,7 +20,7 @@
     watch = true
     exposedbydefault = false
     # Adds a default routing rule for new containers
-    defaultrule = "Host(`jeebs.co`)"
+    defaultrule = "Host(`.jeebs.co`)"
 
 # Used for certificate acquisition - explained later
 [certificatesResolvers.le.acme]
