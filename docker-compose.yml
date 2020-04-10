@@ -60,7 +60,7 @@ services:
       - MYSQL_PASSWORD=bijou
       - MYSQL_DATABASE=npm
       - MYSQL_ROOT_PASSWORD=bijou
-    restart: unless-stopped
+    restart: always
     networks:
       - db
 
