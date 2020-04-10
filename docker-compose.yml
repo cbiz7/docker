@@ -1,68 +1,105 @@
 version: "3.7"
 services:
 
-#   traefik:
-#     image: traefik:latest
-#     container_name: traefik
-#     hostname: traefik
-# #    domainname: ${DOMAIN}
-#     ports:
-#       - "80:80"
-#       - "443:443"
-#     volumes:
-#       - /var/run/docker.sock:/var/run/docker.sock:ro
-#       - ${CONFIG}/traefik:/etc/traefik
-#     environment:
-#       - PGID
-#       - PUID
-#       - TZ
-#     restart: unless-stopped
-#     networks:
-#       - web
-#       - internal
-
-  npm:
-    image: jc21/nginx-proxy-manager:latest
-    container_name: npm
-    hostname: npm
-    # environment:
-      # Uncomment this if IPv6 is not enabled on your host
-      # DISABLE_IPV6: 'true'
-    volumes:
-      # Make sure this config.json file exists as per instructions above:
-      - ${CONFIG}/npm/config.json:/app/config/production.json
-      - ${CONFIG}/npm/data:/data
-      - ${CONFIG}/npm/letsencrypt:/etc/letsencrypt
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    hostname: traefik
+#    domainname: ${DOMAIN}
     ports:
       - "80:80"
       - "443:443"
-      # Admin Web Port:
-      - "8081:81"
-    restart: always
-    depends_on:
-      - npm-db
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${CONFIG}/traefik:/etc/traefik
+
+    environment:
+      - PGID
+      - PUID
+      - TZ
+      - CF_API_EMAIL=${CF_API_EMAIL}
+      - CF_API_KEY=${CF_API_KEY}
+    labels:
+       - traefik.enable=true
+       - traefik.backend=traefik-api
+       # Which network traefik should listen on
+       - traefik.docker.network=web
+       # Reverse proxy configuration - exposes the Traefik dashboard under dash.${DOMAIN}
+       - traefik.http.services.traefik.loadbalancer.server.port=8080
+       # SSL configuration
+       - traefik.http.routers.traefik-ssl.entryPoints=https
+       - traefik.http.routers.traefik-ssl.rule=host(`dash.${DOMAIN}`)
+       - traefik.http.routers.traefik-ssl.tls=true
+       - traefik.http.routers.traefik-ssl.tls.certResolver=le
+       # Single Sign On middleware
+       - traefik.http.routers.traefik-ssl.middlewares=sso@file
+    restart: unless-stopped
     networks:
       - web
       - internal
-      - db
 
-  npm-db:
-    image: linuxserver/mariadb:latest
-    container_name: npm-db
-    hostname: npm-db
+  traefik-sso:
+    image: thomseddon/traefik-forward-auth
+    container_name: traefik-sso
     volumes:
-      - ${CONFIG}/npm/data:/var/lib/mysql
+      - ${CONFIG}/traefik/forward.ini:/forward.ini
     environment:
-      - PUID
-      - PGID
-      - TZ
-      - MYSQL_USER=npm
-      - MYSQL_PASSWORD=bijou
-      - MYSQL_DATABASE=npm
-      - MYSQL_ROOT_PASSWORD=bijou
-    restart: always
+      - CONFIG=/forward.ini
     networks:
-      - db
+      - web
+    labels:
+      - traefik.enable=true
+      - traefik.backend=traefik-sso
+      - traefik.http.services.traefik-sso.loadBalancer.server.port=4181
+      # SSL configuration
+      - traefik.http.routers.traefik-sso-ssl.entryPoints=https
+      - traefik.http.routers.traefik-sso-ssl.rule=host(`auth.${DOMAIN}`)
+      - traefik.http.routers.traefik-sso-ssl.middlewares=sso@file
+      - traefik.http.routers.traefik-sso-ssl.tls=true
+      - traefik.http.routers.traefik-sso-ssl.tls.certResolver=le
+
+  # npm:
+  #   image: jc21/nginx-proxy-manager:latest
+  #   container_name: npm
+  #   hostname: npm
+  #   # environment:
+  #     # Uncomment this if IPv6 is not enabled on your host
+  #     # DISABLE_IPV6: 'true'
+  #   volumes:
+  #     # Make sure this config.json file exists as per instructions above:
+  #     - ${CONFIG}/npm/config.json:/app/config/production.json
+  #     - ${CONFIG}/npm/data:/data
+  #     - ${CONFIG}/npm/letsencrypt:/etc/letsencrypt
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #     # Admin Web Port:
+  #     - "8081:81"
+  #   restart: always
+  #   depends_on:
+  #     - npm-db
+  #   networks:
+  #     - web
+  #     - internal
+  #     - db
+  #
+  # npm-db:
+  #   image: linuxserver/mariadb:latest
+  #   container_name: npm-db
+  #   hostname: npm-db
+  #   volumes:
+  #     - ${CONFIG}/npm/data:/var/lib/mysql
+  #   environment:
+  #     - PUID
+  #     - PGID
+  #     - TZ
+  #     - MYSQL_USER=npm
+  #     - MYSQL_PASSWORD=bijou
+  #     - MYSQL_DATABASE=npm
+  #     - MYSQL_ROOT_PASSWORD=bijou
+  #   restart: always
+  #   networks:
+  #     - db
 
   ouroboros:
     image: pyouroboros/ouroboros:latest
@@ -131,13 +168,13 @@ services:
       - PGID
       - PUID
       - TZ
-    # labels: ## FOR TRAEFIK 2.0
-    #   - traefik.enable=true
-    #   - traefik.http.routers.sonarr.rule=Host(`sonarr.jeebs.co`)
-    #   - traefik.http.routers.sonarr.entrypoints=websecure
-    #   - traefik.http.routers.sonarr.tls=true
-    #   - traefik.http.services.sonarr-service.loadbalancer.server.port=8989
-    #   - traefik.http.services.sonarr-service.loadbalancer.server.scheme=http
+    labels:
+      # Creates a router that listens on the https entrypoint
+      - traefik.http.routers.service-ssl.entryPoints=https
+      - traefik.http.routers.service-ssl.rule=host(`sonarr.${DOMAIN}`)
+      # Enables TLS on this router
+      - traefik.http.routers.service-ssl.tls=true
+      - traefik.http.routers.service-ssl.tls.certResolver=le
     restart: unless-stopped
     networks:
       - internal

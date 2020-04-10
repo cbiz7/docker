@@ -27,4 +27,4 @@
   email = "chris.furby@gmail.com"
   storage = "/etc/traefik/acme/acme.json"
   [certificatesResolvers.le.acme.dnsChallenge]
-    provider = "digitalocean"
+    provider = "cloudflare"
