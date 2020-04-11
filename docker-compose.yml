@@ -1,61 +1,61 @@
 version: "3.7"
 services:
 
-  traefik:
-    image: traefik:latest
-    container_name: traefik
-    hostname: traefik
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${CONFIG}/traefik:/etc/traefik
-
-    environment:
-      - PGID
-      - PUID
-      - TZ
-      - CF_API_EMAIL=${CF_API_EMAIL}
-      - CF_API_KEY=${CF_API_KEY}
-    labels:
-       - traefik.enable=true
-       - traefik.backend=traefik-api
-       # Which network traefik should listen on
-       - traefik.docker.network=web
-       # Reverse proxy configuration - exposes the Traefik dashboard under dash.${DOMAIN}
-       - traefik.http.services.traefik.loadbalancer.server.port=8080
-       # SSL configuration
-       - traefik.http.routers.traefik-ssl.entryPoints=https
-       - traefik.http.routers.traefik-ssl.rule=host(`dash.${DOMAIN}`)
-       - traefik.http.routers.traefik-ssl.tls=true
-       - traefik.http.routers.traefik-ssl.tls.certResolver=le
-       # Single Sign On middleware
-       - traefik.http.routers.traefik-ssl.middlewares=sso@file
-    restart: unless-stopped
-    networks:
-      - web
-      - internal
-
-  traefik-sso:
-    image: thomseddon/traefik-forward-auth
-    container_name: traefik-sso
-    volumes:
-      - ${CONFIG}/traefik/forward.ini:/forward.ini
-    environment:
-      - CONFIG=/forward.ini
-    networks:
-      - web
-    labels:
-      - traefik.enable=true
-      - traefik.backend=traefik-sso
-      - traefik.http.services.traefik-sso.loadBalancer.server.port=4181
-      # SSL configuration
-      - traefik.http.routers.traefik-sso-ssl.entryPoints=https
-      - traefik.http.routers.traefik-sso-ssl.rule=host(`auth.${DOMAIN}`)
-      - traefik.http.routers.traefik-sso-ssl.middlewares=sso@file
-      - traefik.http.routers.traefik-sso-ssl.tls=true
-      - traefik.http.routers.traefik-sso-ssl.tls.certResolver=le
+  # traefik:
+  #   image: traefik:latest
+  #   container_name: traefik
+  #   hostname: traefik
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - ${CONFIG}/traefik:/etc/traefik
+  #
+  #   environment:
+  #     - PGID
+  #     - PUID
+  #     - TZ
+  #     - CF_API_EMAIL=${CF_API_EMAIL}
+  #     - CF_API_KEY=${CF_API_KEY}
+  #   labels:
+  #      - traefik.enable=true
+  #      - traefik.backend=traefik-api
+  #      # Which network traefik should listen on
+  #      - traefik.docker.network=web
+  #      # Reverse proxy configuration - exposes the Traefik dashboard under dash.${DOMAIN}
+  #      - traefik.http.services.traefik.loadbalancer.server.port=8080
+  #      # SSL configuration
+  #      - traefik.http.routers.traefik-ssl.entryPoints=https
+  #      - traefik.http.routers.traefik-ssl.rule=host(`dash.${DOMAIN}`)
+  #      - traefik.http.routers.traefik-ssl.tls=true
+  #      - traefik.http.routers.traefik-ssl.tls.certResolver=le
+  #      # Single Sign On middleware
+  #      - traefik.http.routers.traefik-ssl.middlewares=sso@file
+  #   restart: unless-stopped
+  #   networks:
+  #     - web
+  #     - internal
+  #
+  # traefik-sso:
+  #   image: thomseddon/traefik-forward-auth
+  #   container_name: traefik-sso
+  #   volumes:
+  #     - ${CONFIG}/traefik/forward.ini:/forward.ini
+  #   environment:
+  #     - CONFIG=/forward.ini
+  #   networks:
+  #     - web
+  #   labels:
+  #     - traefik.enable=true
+  #     - traefik.backend=traefik-sso
+  #     - traefik.http.services.traefik-sso.loadBalancer.server.port=4181
+  #     # SSL configuration
+  #     - traefik.http.routers.traefik-sso-ssl.entryPoints=https
+  #     - traefik.http.routers.traefik-sso-ssl.rule=host(`auth.${DOMAIN}`)
+  #     - traefik.http.routers.traefik-sso-ssl.middlewares=sso@file
+  #     - traefik.http.routers.traefik-sso-ssl.tls=true
+  #     - traefik.http.routers.traefik-sso-ssl.tls.certResolver=le
 
   # npm:
   #   image: jc21/nginx-proxy-manager:latest
