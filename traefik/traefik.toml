@@ -1,30 +1,21 @@
-[log]
-  level = "INFO"
-
-[entryPoints]
-  [entryPoints.http]
-    address = ":80"
-  [entryPoints.https]
-    address = ":443"
-
 [api]
   dashboard = true
-  # Exposes the api without TLS, fine for our setup with TLS termination
   insecure = true
 
 [providers]
-  [providers.file]
-    filename = "/etc/traefik/dynamic_conf.toml"
   [providers.docker]
     endpoint = "unix:///var/run/docker.sock"
     watch = true
     exposedbydefault = false
-    # Adds a default routing rule for new containers
-    defaultrule = "Host(`.jeebs.co`)"
 
-# Used for certificate acquisition - explained later
-[certificatesResolvers.le.acme]
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+  [entryPoints.websecure]
+    address = ":443"
+
+[certificatesResolvers.letsencrypt.acme]
   email = "chris.furby@gmail.com"
-  storage = "/etc/traefik/acme/acme.json"
-  [certificatesResolvers.le.acme.dnsChallenge]
+  storage = "acme.json"
+  [certificatesResolvers.letsencrypt.acme.dnsChallenge]
     provider = "cloudflare"
