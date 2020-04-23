@@ -56,23 +56,23 @@ services:
     networks:
       - internal
 
-    organizr2:
-      image: organizrtools/organizr-v2:latest
-      container_name: organizr2
-      hostname: organizr2
-      ports:
-        - "9443:443"
-        - "9080:80"
-      volumes:
-        - ${CONFIG}/organizr2:/config
-      environment:
-        - PGID
-        - PUID
-        - TZ
-      restart: unless-stopped
-      networks:
-        - internal
-        - web
+  organizr2:
+    image: organizrtools/organizr-v2:latest
+    container_name: organizr2
+    hostname: organizr2
+    ports:
+      - "9443:443"
+      - "9080:80"
+    volumes:
+      - ${CONFIG}/organizr2:/config
+    environment:
+      - PGID
+      - PUID
+      - TZ
+    restart: unless-stopped
+    networks:
+      - internal
+      - web
 
   nzbget:
     image: linuxserver/nzbget:latest
