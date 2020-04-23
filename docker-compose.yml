@@ -31,9 +31,9 @@ services:
     environment:
       - CLEANUP=true
       - CRON=0 3 * * * # Check for updates every morning at 3am.
-      - LOG_LEVEL=info
+      - LOG_LEVEL=debug # info is default; troubleshooting why no container updates
       - SELF_UPDATE=true
-      - IGNORE="rtorrent"
+      - IGNORE=rtorrent
       - TZ
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
