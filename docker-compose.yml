@@ -31,7 +31,7 @@ services:
     environment:
       - CLEANUP=true
       - CRON=0 3 * * * # Check for updates every morning at 3am.
-      - LOG_LEVEL=debug # info is default; troubleshooting why no container updates
+      - LOG_LEVEL=info
       - SELF_UPDATE=true
       - IGNORE=rtorrent
       - TZ
