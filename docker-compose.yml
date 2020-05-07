@@ -1,29 +1,6 @@
 version: "3.7"
 services:
 
-  # traefik:
-  #   image: traefik:latest
-  #   container_name: traefik
-  #   hostname: traefik
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #     - "8080:8080" # Dashboard
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #     - ${CONFIG}/traefik/traefik.toml:/etc/traefik/traefik.toml
-  #     - ${CONFIG}/traefik/acme.json:/acme.json
-  #   environment:
-  #     - PGID
-  #     - PUID
-  #     - TZ
-  #     - CF_API_EMAIL=${CF_API_EMAIL}
-  #     - CF_API_KEY=${CF_API_KEY}
-  #   restart: unless-stopped
-  #   networks:
-  #     - web
-  #     - internal
-
   npm:
     image: jc21/nginx-proxy-manager:latest
     container_name: npm
@@ -434,64 +411,48 @@ services:
     networks:
       - internal
 
-  dashmachine:
-    image: rmountjoy/dashmachine:latest
-    container_name: dashmachine
-    hostname: dashmachine
-    ports:
-      - "5050:5000"
-    volumes:
-      - ${CONFIG}/dashmachine:/dashmachine/dashmachine/user_data
-    environment:
-      - PUID
-      - PGID
-      - TZ
-    restart: unless-stopped
-    networks:
-      - internal
-
-  ghost:
-    image: ghost:latest
-    container_name: ghost
-    hostname: ghost
-    ports:
-      - "2368:2368"
-    volumes:
-      - ${CONFIG}/ghost:/var/lib/ghost/content
-    #  - ${CONFIG}/ghost/config.production.json:/var/lib/ghost/config.production.json
-    environment:
-      - PUID
-      - PGID
-      - TZ
-      - database__client=mysql
-      - database__connection__host=ghost-db
-      - database__connection__user=ghost
-      - database__connection__password=ghost
-      - database__connection__database=ghostdb
-      - url=http://10.0.1.11:2368
-    depends_on:
-      - ghost-db
-    networks:
-      - internal
-      - db
-
-  ghost-db:
-    image: linuxserver/mariadb:latest
-    container_name: ghost-db
-    hostname: ghost-db
-    volumes:
-      - ${CONFIG}/ghost-db:/config
-    environment:
-      - PUID
-      - PGID
-      - TZ
-      - MYSQL_USER=ghost
-      - MYSQL_PASSWORD=ghost
-      - MYSQL_DATABASE=ghostdb
-      - MYSQL_ROOT_PASSWORD=bijou
-    restart: unless-stopped
-    networks:
-      - db
+  # ghost:
+  #   image: ghost:latest
+  #   container_name: ghost
+  #   hostname: ghost
+  #   ports:
+  #     - "2368:2368"
+  #   volumes:
+  #     - ${CONFIG}/ghost:/var/lib/ghost/content
+  #   #  - ${CONFIG}/ghost/config.production.json:/var/lib/ghost/config.production.json
+  #   environment:
+  #     - PUID
+  #     - PGID
+  #     - TZ
+  #     - database__client=mysql
+  #     - database__connection__host=ghost-db
+  #     - database__connection__user=ghost
+  #     - database__connection__password=ghost
+  #     - database__connection__database=ghostdb
+  #     - url=http://10.0.1.11:2368
+  #   depends_on:
+  #     - ghost-db
+  #   networks:
+  #     - internal
+  #     - db
+  #
+  # ghost-db:
+  #   image: linuxserver/mariadb:latest
+  #   container_name: ghost-db
+  #   hostname: ghost-db
+  #   volumes:
+  #     - ${CONFIG}/ghost-db:/config
+  #   environment:
+  #     - PUID
+  #     - PGID
+  #     - TZ
+  #     - MYSQL_USER=ghost
+  #     - MYSQL_PASSWORD=ghost
+  #     - MYSQL_DATABASE=ghostdb
+  #     - MYSQL_ROOT_PASSWORD=bijou
+  #   restart: unless-stopped
+  #   networks:
+  #     - db
 
   # minecraft:
   #   image: itzg/minecraft-server:latest
