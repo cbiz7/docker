@@ -295,24 +295,6 @@ services:
     networks:
       - internal
 
-  heimdall:
-    image: linuxserver/heimdall:latest
-    container_name: heimdall
-    hostname: heimdall
-    ports:
-      - "5443:443"
-      - "5080:80"
-    volumes:
-      - ${CONFIG}/heimdall:/config
-    environment:
-      - PGID
-      - PUID
-      - TZ
-    restart: unless-stopped
-    networks:
-      - internal
-      - web
-
   ombi:
     image: linuxserver/ombi:latest
     container_name: ombi
