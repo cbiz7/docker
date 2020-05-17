@@ -276,7 +276,7 @@ services:
     container_name: wiki
     hostname: wiki
     ports:
-      - "3000:3000"
+      - "3030:3000"
     volumes:
       - ${CONFIG}/wiki:/config
     environment:
