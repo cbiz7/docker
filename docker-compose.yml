@@ -272,20 +272,18 @@ services:
       - web
 
   wiki:
-    image: requarks/wiki:latest
+    image: requarks/wiki:2
     container_name: wiki
     hostname: wiki
     ports:
       - "3030:3000"
-    volumes:
-      - ${CONFIG}/wiki:/config
     environment:
       - PUID
       - PGID
       - TZ
-      - DB_TYPE=mariadb
+      - DB_TYPE=postgres
       - DB_HOST=wiki-db
-      - DB_PORT=3306
+      - DB_PORT=5432
       - DB_USER=wiki
       - DB_PASS=bijou
       - DB_NAME=wiki
@@ -296,23 +294,40 @@ services:
       - internal
       - db
 
-  wiki-db:
-    image: linuxserver/mariadb:latest
-    container_name: wiki-db
-    hostname: wiki-db
-    volumes:
-      - ${CONFIG}/wiki-db:/config
-    environment:
-      - PUID
-      - PGID
-      - TZ
-      - MYSQL_USER=wiki
-      - MYSQL_PASSWORD=bijou
-      - MYSQL_DATABASE=wiki
-      - MYSQL_ROOT_PASSWORD=bijou
-    restart: unless-stopped
-    networks:
-      - db
+    wiki-db:
+      image: postgres:11-alpine
+      container_name: wiki-db
+      hostname: wiki-db
+      volumes:
+        - ${CONFIG}/wiki-db:/var/lib/postgresql/data
+      environment:
+        - PUID
+        - PGID
+        - TZ
+        - POSTGRES_USER=wiki
+        - POSTGRES_PASSWORD=bijou
+        - POSTGRES_DB=wiki
+      restart: unless-stopped
+      networks:
+        - db
+
+  # wiki-db:
+  #   image: linuxserver/mariadb:latest
+  #   container_name: wiki-db
+  #   hostname: wiki-db
+  #   volumes:
+  #     - ${CONFIG}/wiki-db:/config
+  #   environment:
+  #     - PUID
+  #     - PGID
+  #     - TZ
+  #     - MYSQL_USER=wiki
+  #     - MYSQL_PASSWORD=bijou
+  #     - MYSQL_DATABASE=wiki
+  #     - MYSQL_ROOT_PASSWORD=bijou
+  #   restart: unless-stopped
+  #   networks:
+  #     - db
 
   # bookstack:
   #   image: linuxserver/bookstack:latest
