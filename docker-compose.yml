@@ -294,22 +294,22 @@ services:
       - internal
       - db
 
-    wiki-db:
-      image: postgres:11-alpine
-      container_name: wiki-db
-      hostname: wiki-db
-      volumes:
-        - ${CONFIG}/wiki-db:/var/lib/postgresql/data
-      environment:
-        - PUID
-        - PGID
-        - TZ
-        - POSTGRES_USER=wiki
-        - POSTGRES_PASSWORD=bijou
-        - POSTGRES_DB=wiki
-      restart: unless-stopped
-      networks:
-        - db
+  wiki-db:
+    image: postgres:11-alpine
+    container_name: wiki-db
+    hostname: wiki-db
+    volumes:
+      - ${CONFIG}/wiki-db:/var/lib/postgresql/data
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - POSTGRES_USER=wiki
+      - POSTGRES_PASSWORD=bijou
+      - POSTGRES_DB=wiki
+    restart: unless-stopped
+    networks:
+      - db
 
   # wiki-db:
   #   image: linuxserver/mariadb:latest
