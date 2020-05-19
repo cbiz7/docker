@@ -278,9 +278,9 @@ services:
     ports:
       - "3030:3000"
     environment:
-      - PUID
-      - PGID
-      - TZ
+      # - PUID
+      # - PGID
+      # - TZ
       - DB_TYPE=postgres
       - DB_HOST=wiki-db
       - DB_PORT=5432
@@ -301,12 +301,14 @@ services:
     volumes:
       - ${CONFIG}/wiki-db:/var/lib/postgresql/data
     environment:
-      - PUID
-      - PGID
-      - TZ
+      # - PUID
+      # - PGID
+      # - TZ
       - POSTGRES_USER=wiki
       - POSTGRES_PASSWORD=bijou
       - POSTGRES_DB=wiki
+    logging:
+      driver: "none"
     restart: unless-stopped
     networks:
       - db
