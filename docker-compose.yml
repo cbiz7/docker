@@ -278,12 +278,13 @@ services:
     ports:
       - "3030:3000"
     environment:
-      # - PUID
-      # - PGID
-      # - TZ
-      - DB_TYPE=postgres
+      - PUID
+      - PGID
+      - TZ
+      - DB_TYPE=mariadb
       - DB_HOST=wiki-db
-      - DB_PORT=5432
+      #- DB_PORT=5432 # postgres port
+      - DB_PORT=3306 # mariadb port
       - DB_USER=wiki
       - DB_PASS=bijou
       - DB_NAME=wiki
@@ -294,84 +295,84 @@ services:
       - internal
       - db
 
-  wiki-db:
-    image: postgres:11-alpine
+  # wiki-db:
+  #   image: postgres:11-alpine
+  #   container_name: wiki-db
+  #   hostname: wiki-db
+  #   volumes:
+  #     - ${CONFIG}/wiki-db:/var/lib/postgresql/data
+  #   environment:
+  #     # - PUID
+  #     # - PGID
+  #     # - TZ
+  #     - POSTGRES_USER=wiki
+  #     - POSTGRES_PASSWORD=bijou
+  #     - POSTGRES_DB=wiki
+  #   logging:
+  #     driver: "none"
+  #   restart: unless-stopped
+  #   networks:
+  #     - db
+
+  wiki-db: # mariadb version DB for wiki.js
+    image: linuxserver/mariadb:latest
     container_name: wiki-db
     hostname: wiki-db
     volumes:
-      - ${CONFIG}/wiki-db:/var/lib/postgresql/data
+      - ${CONFIG}/wiki-db:/config
     environment:
-      # - PUID
-      # - PGID
-      # - TZ
-      - POSTGRES_USER=wiki
-      - POSTGRES_PASSWORD=bijou
-      - POSTGRES_DB=wiki
-    logging:
-      driver: "none"
+      - PUID
+      - PGID
+      - TZ
+      - MYSQL_USER=wiki
+      - MYSQL_PASSWORD=bijou
+      - MYSQL_DATABASE=wiki
+      - MYSQL_ROOT_PASSWORD=bijou
     restart: unless-stopped
     networks:
       - db
 
-  # wiki-db:
-  #   image: linuxserver/mariadb:latest
-  #   container_name: wiki-db
-  #   hostname: wiki-db
-  #   volumes:
-  #     - ${CONFIG}/wiki-db:/config
-  #   environment:
-  #     - PUID
-  #     - PGID
-  #     - TZ
-  #     - MYSQL_USER=wiki
-  #     - MYSQL_PASSWORD=bijou
-  #     - MYSQL_DATABASE=wiki
-  #     - MYSQL_ROOT_PASSWORD=bijou
-  #   restart: unless-stopped
-  #   networks:
-  #     - db
+  bookstack:
+    image: linuxserver/bookstack:latest
+    container_name: bookstack
+    hostname: bookstack
+    ports:
+      - "6875:80"
+      - "6876:443"
+    volumes:
+      - ${CONFIG}/bookstack:/config
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - DB_HOST=bookstack-db
+      - DB_USER=books
+      - DB_PASS=books
+      - DB_DATABASE=bookstack
+    depends_on:
+      - bookstack-db
+    restart: unless-stopped
+    networks:
+      - internal
+      - db
 
-  # bookstack:
-  #   image: linuxserver/bookstack:latest
-  #   container_name: bookstack
-  #   hostname: bookstack
-  #   ports:
-  #     - "6875:80"
-  #     - "6876:443"
-  #   volumes:
-  #     - ${CONFIG}/bookstack:/config
-  #   environment:
-  #     - PUID
-  #     - PGID
-  #     - TZ
-  #     - DB_HOST=bookstack-db
-  #     - DB_USER=books
-  #     - DB_PASS=books
-  #     - DB_DATABASE=bookstack
-  #   depends_on:
-  #     - bookstack-db
-  #   restart: unless-stopped
-  #   networks:
-  #     - internal
-  #     - db
-  #
-  # bookstack-db:
-  #   image: linuxserver/mariadb:latest
-  #   container_name: bookstack-db
-  #   hostname: bookstack-db
-  #   volumes:
-  #     - ${CONFIG}/bookstack-db:/config
-  #   environment:
-  #     - PUID
-  #     - PGID
-  #     - TZ
-  #     - MYSQL_USER=books
-  #     - MYSQL_PASSWORD=books
-  #     - MYSQL_DATABASE=bookstack
-  #     - MYSQL_ROOT_PASSWORD=bijou
-  #   restart: unless-stopped
-  #   networks:
-  #     - db
+  bookstack-db:
+    image: linuxserver/mariadb:latest
+    container_name: bookstack-db
+    hostname: bookstack-db
+    volumes:
+      - ${CONFIG}/bookstack-db:/config
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - MYSQL_USER=books
+      - MYSQL_PASSWORD=books
+      - MYSQL_DATABASE=bookstack
+      - MYSQL_ROOT_PASSWORD=bijou
+    restart: unless-stopped
+    networks:
+      - db
 
   calibre:
     image: linuxserver/calibre-web:latest
@@ -404,7 +405,7 @@ services:
       - ${TORRENTS}:/data
     environment:
       - UID=1026 # Defined differently in container
-      - GID=101 # Defined diffrently in container
+      - GID=101 # Defined differently in container
       - TZ
       - FLOOD_SECRET=bijou
     networks:
