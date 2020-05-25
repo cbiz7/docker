@@ -284,7 +284,7 @@ services:
       - DB_TYPE=mariadb
       - DB_HOST=wiki-db
       #- DB_PORT=5432 # postgres port
-      #- DB_PORT=3306 # mariadb port
+      - DB_PORT=3306 # mariadb port
       - DB_USER=wiki
       - DB_PASS=bijou
       - DB_NAME=wiki
@@ -295,7 +295,7 @@ services:
       - internal
       - db
 
-  # wiki-db:
+  # wiki-db: # postgres version DB for wiki.js
   #   image: postgres:11-alpine
   #   container_name: wiki-db
   #   hostname: wiki-db
