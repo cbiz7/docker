@@ -40,3 +40,14 @@ services:
     networks:
       - internal
       - web
+
+networks:
+  web:
+    name: web
+    external: true
+  internal:
+    name: internal
+    external: false
+  db: # for containers using databases
+    name: db
+    external: false
