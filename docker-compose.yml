@@ -26,9 +26,10 @@ services:
   homer:
     image: nx211/docker-homer
     container_name: homer
+    hostname: homer
     ports:
       - "3443:443"
-      - "3080:80"	
+      - "3080:80"
     environment:
       - PGID
       - PUID
@@ -64,8 +65,8 @@ services:
     hostname: portainer
     command: -H unix:///var/run/docker.sock
     ports:
-    - "9000:9000"
-    - "8000:8000"
+      - "9000:9000"
+      - "8000:8000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${CONFIG}/portainer:/data
