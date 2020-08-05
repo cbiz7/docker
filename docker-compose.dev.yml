@@ -57,7 +57,7 @@ services:
      - HOMEBRIDGE_CONFIG_UI=1
      - HOMEBRIDGE_CONFIG_UI_PORT=8080
     restart: unless-stopped
-    netowrks:
+    networks:
       - internal
 
 networks:
