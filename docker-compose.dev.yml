@@ -41,23 +41,6 @@ services:
   #     - internal
   #     - web
 
-  homebridge:
-    image: oznu/homebridge:latest
-    container_name: homebridge
-    hostname: homebridge
-    # ports:
-    #  - "1080:8080"
-    network_mode: host
-    volumes:
-     - ${CONFIG}/homebridge:/homebridge
-    environment:
-     - PGID
-     - PUID
-     - TZ
-     - HOMEBRIDGE_CONFIG_UI=1
-     - HOMEBRIDGE_CONFIG_UI_PORT=1080
-    restart: unless-stopped
-
 networks:
   web:
     name: web
