@@ -413,23 +413,44 @@ services:
     networks:
     - internal
 
-  rtorrent: # wonderfall version
-    image: wonderfall/rtorrent-flood:latest
-    container_name: rtorrent
-    hostname: rtorrent
-    tty: true # Necessary or rtorrent will use 100% of CPU
+  # rtorrent: # wonderfall version
+  #   image: wonderfall/rtorrent-flood:latest
+  #   container_name: rtorrent
+  #   hostname: rtorrent
+  #   tty: true # Necessary or rtorrent will use 100% of CPU
+  #   ports:
+  #     - "3000:3000"
+  #     - "51415:49184/udp"
+  #     - "51415:49184/tcp"
+  #   volumes:
+  #     - ${CONFIG}/rtorrent:/flood-db
+  #     - ${TORRENTS}:/data
+  #   environment:
+  #     - UID=1026 # Defined differently in container
+  #     - GID=101 # Defined differently in container
+  #     - TZ
+  #     - FLOOD_SECRET=bijou
+  #   networks:
+  #     - internal
+
+  transmission:
+    image: ghcr.io/linuxserver/transmission:latest
+    container_name: transmission
+    hostname: transmission
     ports:
-      - "3000:3000"
-      - "51415:49184/udp"
-      - "51415:49184/tcp"
+      - "9091:9091"
+      - "51413:49184"
+      - "51413:49184/udp"
     volumes:
-      - ${CONFIG}/rtorrent:/flood-db
-      - ${TORRENTS}:/data
+      - ${CONFIG}/transmission:/config
+      - ${TORRENTS}:/downloads
+      # - <path to watch folder>:/watch
     environment:
-      - UID=1026 # Defined differently in container
-      - GID=101 # Defined differently in container
+      - PUID
+      - PGID
       - TZ
-      - FLOOD_SECRET=bijou
+      - TRANSMISSION_WEB_HOME=/combustion-release/ #optional UI theme
+    restart: unless-stopped
     networks:
       - internal
 
