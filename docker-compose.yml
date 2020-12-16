@@ -431,7 +431,7 @@ services:
       - UID=1026 # Defined differently in container
       - GID=101 # Defined differently in container
       - TZ
-      - FLOOD_SECRET=bijou
+      - FLOOD_SECRET=bijoubijoubijoubijoubijoubijou
       - DISABLE_AUTH=true
     networks:
       - internal
