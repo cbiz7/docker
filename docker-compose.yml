@@ -42,23 +42,6 @@ services:
   #     - internal
   #     - web
 
-  # ouroboros:
-  #   image: pyouroboros/ouroboros:latest
-  #   container_name: ouroboros
-  #   hostname: ouroboros
-  #   environment:
-  #     - CLEANUP=true
-  #     - CRON=0 3 * * * # Check for updates every morning at 3am.
-  #     - LOG_LEVEL=info
-  #     - SELF_UPDATE=true
-  #     - IGNORE=rtorrent
-  #     - TZ
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #   restart: unless-stopped
-  #   networks:
-  #     - internal
-
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
@@ -435,27 +418,6 @@ services:
       - DISABLE_AUTH=true
     networks:
       - internal
-
-  # transmission:
-  #   image: ghcr.io/linuxserver/transmission:latest
-  #   container_name: transmission
-  #   hostname: transmission
-  #   ports:
-  #     - "9091:9091"
-  #     - "51413:49184"
-  #     - "51413:49184/udp"
-  #   volumes:
-  #     - ${CONFIG}/transmission:/config
-  #     - ${TORRENTS}:/downloads
-  #     # - <path to watch folder>:/watch
-  #   environment:
-  #     - PUID
-  #     - PGID
-  #     - TZ
-  #     - TRANSMISSION_WEB_HOME=/combustion-release/ #optional UI theme
-  #   restart: unless-stopped
-  #   networks:
-  #     - internal
 
   # ghost:
   #   image: ghost:latest
