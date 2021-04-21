@@ -1,82 +1,6 @@
 version: "3.7"
 services:
 
-#############################
-# PORTALS FOR SERVER
-#############################
-
-  # heimdall:
-  #   image: linuxserver/heimdall:latest
-  #   container_name: heimdall
-  #   hostname: heimdall
-  #   ports:
-  #     - "5443:443"
-  #     - "5080:80"
-  #   volumes:
-  #     - ${CONFIG}/heimdall:/config
-  #   environment:
-  #     - PGID
-  #     - PUID
-  #     - TZ
-  #   restart: unless-stopped
-  #   networks:
-  #     - internal
-  #     - web
-  #
-  # homer:
-  #   image: nx211/docker-homer
-  #   container_name: homer
-  #   hostname: homer
-  #   ports:
-  #     - "3443:443"
-  #     - "3080:80"
-  #   environment:
-  #     - PGID
-  #     - PUID
-  #     - TZ
-  #   volumes:
-  #     - ${CONFIG}/homer/nginx:/config # optional for access to nginx config
-  #     - ${CONFIG}/homer/config/config.yml:/homer/config.yml
-  #   restart: unless-stopped
-  #   networks:
-  #     - internal
-  #     - web
-
-  portainer:
-    image: portainer/portainer-ce:latest
-    container_name: portainer
-    hostname: portainer
-    command: -H unix:///var/run/docker.sock
-    ports:
-      - "9000:9000"
-      - "8000:8000"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ${CONFIG}/portainer:/data
-    restart: unless-stopped
-    networks:
-      - internal
-
-  organizr2:
-    image: organizr/organizr:latest
-    container_name: organizr
-    hostname: organizr
-    ports:
-      - "9443:443"
-      - "9080:80"
-    volumes:
-      - ${CONFIG}/organizr2:/config
-    environment:
-      - fpm=true #true or false | using true will provide better performance
-      - branch=v2-master #v2-master or #v2-develop
-      - PGID
-      - PUID
-      - TZ
-    restart: unless-stopped
-    networks:
-      - internal
-      - web
-
   nzbget:
     image: linuxserver/nzbget:latest
     container_name: nzbget
@@ -96,7 +20,7 @@ services:
       - internal
 
   sonarr:
-    image: linuxserver/sonarr:preview
+    image: linuxserver/sonarr:latest
     container_name: sonarr
     hostname: sonarr
     dns:
@@ -158,26 +82,26 @@ services:
     networks:
       - internal
 
-  lidarr:
-    image: linuxserver/lidarr:latest
-    container_name: lidarr
-    hostname: lidarr
-    dns:
-      - "10.0.1.3"
-      - "1.1.1.1"
-    ports:
-      - "8686:8686"
-    volumes:
-      - ${CONFIG}/lidarr:/config
-      - /etc/localtime:/etc/localtime:ro
-      - ${DOWNLOAD}:/downloads
-      - ${MUSIC}:/music
-    environment:
-      - PGID
-      - PUID
-    restart: unless-stopped
-    networks:
-      - internal
+  # lidarr:
+  #   image: linuxserver/lidarr:latest
+  #   container_name: lidarr
+  #   hostname: lidarr
+  #   dns:
+  #     - "10.0.1.3"
+  #     - "1.1.1.1"
+  #   ports:
+  #     - "8686:8686"
+  #   volumes:
+  #     - ${CONFIG}/lidarr:/config
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - ${DOWNLOAD}:/downloads
+  #     - ${MUSIC}:/music
+  #   environment:
+  #     - PGID
+  #     - PUID
+  #   restart: unless-stopped
+  #   networks:
+  #     - internal
 
   bazarr:
     image: linuxserver/bazarr:latest
@@ -198,43 +122,6 @@ services:
     restart: unless-stopped
     networks:
       - internal
-
-  # nzbhydra2:
-  #   image: linuxserver/hydra2:latest
-  #   container_name: hydra2
-  #   hostname: hydra2
-  #   dns:
-  #     - "10.0.1.3"
-  #     - "1.1.1.1"
-  #   ports:
-  #     - "5076:5076"
-  #   volumes:
-  #     - ${CONFIG}/hydra2:/config
-  #     - ${DOWNLOAD}:/downloads
-  #   environment:
-  #     - PGID
-  #     - PUID
-  #     - TZ
-  #   restart: unless-stopped
-  #   networks:
-  #     - internal
-  #
-  # jackett:
-  #   image: linuxserver/jackett:latest
-  #   container_name: jackett
-  #   hostname: jackett
-  #   ports:
-  #     - "9117:9117"
-  #   volumes:
-  #     - ${CONFIG}/jackett:/config
-  #     - ${TORRENTS}:/downloads
-  #   environment:
-  #     - PUID
-  #     - PGID
-  #     - TZ
-  #   restart: unless-stopped
-  #   networks:
-  #     - internal
 
   plex:
     image: linuxserver/plex:latest
@@ -297,61 +184,58 @@ services:
   #     - internal
   #     - web
 
-  # wiki:
-  #   image: requarks/wiki:2
-  #   container_name: wiki
-  #   hostname: wiki
-  #   ports:
-  #     - "3030:3000"
-  #   environment:
-  #     - PUID
-  #     - PGID
-  #     - TZ
-  #     - DB_TYPE=mariadb
-  #     - DB_HOST=wiki-db
-  #     #- DB_PORT=5432 # postgres port
-  #     - DB_PORT=3306 # mariadb port
-  #     - DB_USER=wiki
-  #     - DB_PASS=bijou
-  #     - DB_NAME=wiki
-  #   depends_on:
-  #     - wiki-db
-  #   restart: unless-stopped
-  #   networks:
-  #     - internal
-  #     - db
-  #
-  # wiki-db: # mariadb version DB for wiki.js
-  #   image: linuxserver/mariadb:latest
-  #   container_name: wiki-db
-  #   hostname: wiki-db
-  #   volumes:
-  #     - ${CONFIG}/wiki-db:/config
-  #   environment:
-  #     - PUID
-  #     - PGID
-  #     - TZ
-  #     - MYSQL_USER=wiki
-  #     - MYSQL_PASSWORD=bijou
-  #     - MYSQL_DATABASE=wiki
-  #     - MYSQL_ROOT_PASSWORD=bijou
-  #   restart: unless-stopped
-  #   networks:
-  #     - db
+  wiki:
+    image: requarks/wiki:latest
+    container_name: wiki
+    hostname: wiki
+    ports:
+      - "3030:3000"
+    environment:
+      - PUID
+      - PGID
+      - TZ
+      - DB_TYPE=postgres
+      - DB_HOST=wiki-db
+      - DB_PORT=5432
+      - DB_USER=wikijs
+      - DB_PASS=wikijsrocks
+      - DB_NAME=wiki
+      - WIKI_HOST=http://10.0.1.11:3030
+    depends_on:
+      - wiki-db
+    restart: unless-stopped
+    networks:
+      - internal
+      - db
+  
+  wiki-db: 
+    image: postgres:11-alpine
+    container_name: wiki-db
+    hostname: wiki-db
+    volumes:
+      - ${CONFIG}/wiki:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=wiki
+      - POSTGRES_PASSWORD=wikijsrocks
+      - POSTGRES_USER=wikijs
+    restart: unless-stopped
+    networks:
+      - db
 
   bookstack:
-    image: linuxserver/bookstack:latest
+    image: ghcr.io/linuxserver/bookstack:latest
     container_name: bookstack
     hostname: bookstack
     ports:
       - "6875:80"
       - "6876:443"
     volumes:
-      - ${CONFIG}/bookstack:/config
+      - ${CONFIG}/bookstack/data:/config
     environment:
       - PUID
       - PGID
       - TZ
+      - APP_URL=http://10.0.1.11:6875
       - DB_HOST=bookstack-db
       - DB_USER=books
       - DB_PASS=books
@@ -364,11 +248,11 @@ services:
       - db
 
   bookstack-db:
-    image: linuxserver/mariadb:latest
+    image: ghcr.io/linuxserver/mariadb:latest
     container_name: bookstack-db
     hostname: bookstack-db
     volumes:
-      - ${CONFIG}/bookstack-db:/config
+      - ${CONFIG}/bookstack/db:/config
     environment:
       - PUID
       - PGID
@@ -419,48 +303,6 @@ services:
     networks:
       - internal
 
-  # ghost:
-  #   image: ghost:latest
-  #   container_name: ghost
-  #   hostname: ghost
-  #   ports:
-  #     - "2368:2368"
-  #   volumes:
-  #     - ${CONFIG}/ghost:/var/lib/ghost/content
-  #   #  - ${CONFIG}/ghost/config.production.json:/var/lib/ghost/config.production.json
-  #   environment:
-  #     - PUID
-  #     - PGID
-  #     - TZ
-  #     - database__client=mysql
-  #     - database__connection__host=ghost-db
-  #     - database__connection__user=ghost
-  #     - database__connection__password=ghost
-  #     - database__connection__database=ghostdb
-  #     - url=http://10.0.1.11:2368
-  #   depends_on:
-  #     - ghost-db
-  #   networks:
-  #     - internal
-  #     - db
-  #
-  # ghost-db:
-  #   image: linuxserver/mariadb:latest
-  #   container_name: ghost-db
-  #   hostname: ghost-db
-  #   volumes:
-  #     - ${CONFIG}/ghost-db:/config
-  #   environment:
-  #     - PUID
-  #     - PGID
-  #     - TZ
-  #     - MYSQL_USER=ghost
-  #     - MYSQL_PASSWORD=ghost
-  #     - MYSQL_DATABASE=ghostdb
-  #     - MYSQL_ROOT_PASSWORD=bijou
-  #   restart: unless-stopped
-  #   networks:
-  #     - db
 
   # minecraft:
   #   image: itzg/minecraft-server:latest
