@@ -184,44 +184,6 @@ services:
   #     - internal
   #     - web
 
-  wiki:
-    image: requarks/wiki:latest
-    container_name: wiki
-    hostname: wiki
-    ports:
-      - "3030:3000"
-    environment:
-      - PUID
-      - PGID
-      - TZ
-      - DB_TYPE=postgres
-      - DB_HOST=wiki-db
-      - DB_PORT=5432
-      - DB_USER=wikijs
-      - DB_PASS=wikijsrocks
-      - DB_NAME=wiki
-      - WIKI_HOST=http://10.0.1.11:3030
-    depends_on:
-      - wiki-db
-    restart: unless-stopped
-    networks:
-      - internal
-      - db
-  
-  wiki-db: 
-    image: postgres:11-alpine
-    container_name: wiki-db
-    hostname: wiki-db
-    volumes:
-      - ${CONFIG}/wiki:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=wiki
-      - POSTGRES_PASSWORD=wikijsrocks
-      - POSTGRES_USER=wikijs
-    restart: unless-stopped
-    networks:
-      - db
-
   bookstack:
     image: ghcr.io/linuxserver/bookstack:latest
     container_name: bookstack
@@ -302,7 +264,6 @@ services:
       - DISABLE_AUTH=true
     networks:
       - internal
-
 
   # minecraft:
   #   image: itzg/minecraft-server:latest
