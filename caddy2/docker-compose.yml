@@ -16,7 +16,7 @@ services:
       - "443:443"
     volumes:
       # different .env file. "CONFIG" defined as docker/caddy2
-      -./config:/config
+      - ./config:/config
       - ./data:/data
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
     environment:
