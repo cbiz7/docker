@@ -4,46 +4,46 @@
 version: "3.7"
 services:
 
-  caddy2:
-    image: caddy
-    container_name: caddy
-    hostname: caddy
-    # dns:
-    #   - "10.0.1.3"
-    #   - "1.1.1.1"
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      # different .env file. "CONFIG" defined as docker/caddy2
-      - ./config:/config
-      - ./data:/data
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-    environment:
-      - PGID
-      - PUID
-      - TZ
-      - DOMAIN
-    restart: unless-stopped
-    networks:
-      - internal
-      - web
-
-  whoami:
-    image: containous/whoami
-    container_name: whoami
-    hostname: whoami
-    networks:
-      - internal
-      - web
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    hostname: nginx
-    networks:
-      - internal
-      - web
+  # caddy2:
+  #   image: caddy
+  #   container_name: caddy
+  #   hostname: caddy
+  #   # dns:
+  #   #   - "10.0.1.3"
+  #   #   - "1.1.1.1"
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     # different .env file. "CONFIG" defined as docker/caddy2
+  #     - ./config:/config
+  #     - ./data:/data
+  #     - ./Caddyfile:/etc/caddy/Caddyfile:ro
+  #   environment:
+  #     - PGID
+  #     - PUID
+  #     - TZ
+  #     - DOMAIN
+  #   restart: unless-stopped
+  #   networks:
+  #     - internal
+  #     - web
+  #
+  # whoami:
+  #   image: containous/whoami
+  #   container_name: whoami
+  #   hostname: whoami
+  #   networks:
+  #     - internal
+  #     - web
+  #
+  # nginx:
+  #   image: nginx:latest
+  #   container_name: nginx
+  #   hostname: nginx
+  #   networks:
+  #     - internal
+  #     - web
 
   wiki:
     image: requarks/wiki:latest
