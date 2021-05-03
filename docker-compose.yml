@@ -337,8 +337,6 @@ services:
       - PUID
       - TZ
     restart: unless-stopped
-    networks:
-      - internal
 
 networks:
   web:
