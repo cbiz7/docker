@@ -4,84 +4,46 @@
 version: "3.7"
 services:
 
-  # caddy2:
-  #   image: caddy
-  #   container_name: caddy
-  #   hostname: caddy
-  #   # dns:
-  #   #   - "10.0.1.3"
-  #   #   - "1.1.1.1"
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   volumes:
-  #     # different .env file. "CONFIG" defined as docker/caddy2
-  #     - ./config:/config
-  #     - ./data:/data
-  #     - ./Caddyfile:/etc/caddy/Caddyfile:ro
-  #   environment:
-  #     - PGID
-  #     - PUID
-  #     - TZ
-  #     - DOMAIN
-  #   restart: unless-stopped
-  #   networks:
-  #     - internal
-  #     - web
-  #
-  # whoami:
-  #   image: containous/whoami
-  #   container_name: whoami
-  #   hostname: whoami
-  #   networks:
-  #     - internal
-  #     - web
-  #
-  # nginx:
-  #   image: nginx:latest
-  #   container_name: nginx
-  #   hostname: nginx
-  #   networks:
-  #     - internal
-  #     - web
-
-  wiki:
-    image: requarks/wiki:latest
-    container_name: wiki
-    hostname: wiki
+  caddy2:
+    image: caddy
+    container_name: caddy
+    hostname: caddy
+    # dns:
+    #   - "10.0.1.3"
+    #   - "1.1.1.1"
     ports:
-      - "3000:3000"
+      - "80:80"
+      - "443:443"
+    volumes:
+      # different .env file. "CONFIG" defined as docker/caddy2
+      - ./config:/config
+      - ./data:/data
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
     environment:
-      - PUID
       - PGID
+      - PUID
       - TZ
-      - DB_TYPE=postgres
-      - DB_HOST=wiki-db
-      - DB_PORT=5432
-      - DB_USER=wikijs
-      - DB_PASS=wikijsrocks
-      - DB_NAME=wiki
-      - WIKI_HOST=http://10.0.1.4:3000
-    depends_on:
-      - wiki-db
+      - DOMAIN
     restart: unless-stopped
     networks:
       - internal
-      - db
+      - web
 
-  wiki-db:
-    image: postgres:11-alpine
-    container_name: wiki-db
-    hostname: wiki-db
-    volumes:
-      - ./wiki:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=wiki
-      - POSTGRES_PASSWORD=wikijsrocks
-      - POSTGRES_USER=wikijs
-    restart: unless-stopped
+  whoami:
+    image: containous/whoami
+    container_name: whoami
+    hostname: whoami
     networks:
-      - db
+      - internal
+      - web
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    hostname: nginx
+    networks:
+      - internal
+      - web
 
 networks:
   web:

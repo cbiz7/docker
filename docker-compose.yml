@@ -319,24 +319,25 @@ services:
     networks:
       - internal
 
-  jellyfin:
-    image: jellyfin/jellyfin
-    container_name: jellyfin
-    hostname: jellyfin
-    network_mode: host
-    ports:
-      - "8096:8096"
-    volumes:
-      - ${CONFIG}/jellyfin/config:/config
-      - ${CONFIG}/jellyfin/cache:/cache
-      - ${TVSHOWS}:/TV Shows
-      - ${MOVIES}:/Movies
-      - ${MOVIES4K}:/4K Movies
-    environment:
-      - PGID
-      - PUID
-      - TZ
-    restart: unless-stopped
+  # Tested and working; scanned 5/3/2021.  Using Plex for remote access.
+  # jellyfin:
+  #   image: jellyfin/jellyfin
+  #   container_name: jellyfin
+  #   hostname: jellyfin
+  #   network_mode: host
+  #   ports:
+  #     - "8096:8096"
+  #   volumes:
+  #     - ${CONFIG}/jellyfin/config:/config
+  #     - ${CONFIG}/jellyfin/cache:/cache
+  #     - ${TVSHOWS}:/TV Shows
+  #     - ${MOVIES}:/Movies
+  #     - ${MOVIES4K}:/4K Movies
+  #   environment:
+  #     - PGID
+  #     - PUID
+  #     - TZ
+  #   restart: unless-stopped
 
 networks:
   web:
