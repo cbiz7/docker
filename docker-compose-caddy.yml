@@ -1,5 +1,4 @@
 # Caddy2 reverse proxy compose file
-# Runs off Raspberry Pi in ~/docker/caddy2 folder
 
 version: "3.7"
 services:
@@ -15,10 +14,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      # different .env file. "CONFIG" defined as docker/caddy2
-      - ./config:/config
-      - ./data:/data
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ${CONFIG}/caddy2/config:/config
+      - ${CONFIG}/caddy2/data:/data
+      - ${CONFIG}/caddy2/Caddyfile:/etc/caddy/Caddyfile:ro
     environment:
       - PGID
       - PUID
