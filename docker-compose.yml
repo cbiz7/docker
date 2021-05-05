@@ -3,6 +3,19 @@
 version: "3.7"
 services:
 
+  yacht:
+    image: selfhostedpro/yacht
+    container_name: yacht
+    hostname: yacht
+    ports:
+      - 8000:8000
+    volumes:
+      - ${CONFIG}/yacht:/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    networks:
+      - internal
+
   nzbget:
     image: linuxserver/nzbget:latest
     container_name: nzbget
