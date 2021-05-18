@@ -4,7 +4,7 @@ version: "3.7"
 services:
 
   caddy2:
-    image: caddy
+    image: ghcr.io/nklmilojevic/caddy2-custom:0.0.4
     container_name: caddy
     hostname: caddy
     # dns:

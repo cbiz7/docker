@@ -1,11 +1,15 @@
 {
-    acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+email   chris.furby@gmail.com
 }
 
-a.{$DOMAIN} {
+{
+#    acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+}
+
+whoami.{$DOMAIN} {
     reverse_proxy whoami:80
 }
 
-b.{$DOMAIN} {
+web.{$DOMAIN} {
     reverse_proxy nginx:80
 }
